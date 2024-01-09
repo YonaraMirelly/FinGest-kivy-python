@@ -1,0 +1,2 @@
+from pacotinhofarinha import moeda
+from pacotinhofarinha import dados
