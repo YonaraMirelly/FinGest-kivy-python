@@ -8,37 +8,38 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
+from kivy.uix.relativelayout import RelativeLayout
 import webbrowser 
 
 class FinGestApp(App):
     def build(self):
         Window.clearcolor = ( 5/255.0, 69/255.0, 4/255.0, 1)
-        self.layout = BoxLayout(orientation='vertical',padding = 10, spacing = 50)
-
+        self.layout = BoxLayout(orientation='vertical')
+        self.layout = RelativeLayout()
         self.show_welcome_screen()
         return self.layout
 #tela inicial de boas-vindas
     def show_welcome_screen(self):
-        welcome_label = Label(text='BEM VINDO(a) AO FINGEST', font_size = 50, italic = True)
-        welcome_label2 = Label(text='Seu aplicativo de gestão financeira está aqui para lhe ajudar a nunca ter problemas financeiros.', font_size = 25, italic = True)
-        welcome_label3 = Label(text='Preparado?', font_size = 55, italic = True)
+        background = Image(source='FinGest.png', allow_stretch=True, keep_ratio=False)
+        
         #esse botão direciona para a 2ª interface
-        start_button = Button(text='SIM!', size_hint = (0.3,0.3),
-                              font_size = 45, 
-                              pos_hint = {"center_x": 0.5, "y": 0.5}, 
-                              background_color = (246/255.0,249/255.0,6/255.0,1),
+        start_button = Button(text='SIM!', size_hint=(0.3, 0.3),
+                              font_size=45,
+                              pos_hint={"center_x": 0.5, "center_y": 0.5},
+                              background_color=(246/255.0, 249/255.0, 6/255.0, 1),
                               on_press=self.show_salary_input)
+        start_button.pos = (Window.width / 2 - start_button.width / 2, Window.height / 2 - start_button.height / 2)
+        start_button.size = (300, 100) 
         
         self.layout.clear_widgets()
-        self.layout.add_widget(welcome_label)
-        self.layout.add_widget(welcome_label2)
-        self.layout.add_widget(welcome_label3)
         self.layout.add_widget(start_button)
+        self.layout.add_widget(background)
 #tela pra o usuário adicionar o seu salário para análise
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
         
-        self.salary_label = Label(text='Digite o seu salário', font_size = 80, bold = True, italic = True, 
+        self.salary_label = Label(text='Digite o seu salário', font_size = 80, bold = True, italic = True,
+                                  pos_hint={"center_x": 0.5, "center_y": 0.9}, 
                                   color = (245/255.0,192/255.0,11/255.0,1))
         self.salary_input = TextInput(hint_text='Insira o salário', multiline=False,  
                                       pos_hint={"center_x": 0.5, "center_y": 0.6},
