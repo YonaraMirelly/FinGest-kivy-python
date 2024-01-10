@@ -13,9 +13,8 @@ import webbrowser
 class FinGestApp(App):
     def build(self):
         Window.clearcolor = ( 5/255.0, 69/255.0, 4/255.0, 1)
-        self.layout = BoxLayout(orientation='vertical', padding = 10)
-        bg_image = Image(source='imagem_f.png', allow_stretch=True, keep_ratio=False, size_hint=(1, 1))
-        self.layout.add_widget(bg_image, index=0)
+        self.layout = BoxLayout(orientation='vertical',padding = 10, spacing = 50)
+
         self.show_welcome_screen()
         return self.layout
 #tela inicial de boas-vindas
@@ -27,8 +26,9 @@ class FinGestApp(App):
         start_button = Button(text='SIM!', size_hint = (0.3,0.3),
                               font_size = 45, 
                               pos_hint = {"center_x": 0.5, "y": 0.5}, 
-                              background_color = ( 249/255.0, 227/255.0, 5/255.0, 1), 
-                              on_press=self.show_salary_input,)
+                              background_color = (246/255.0,249/255.0,6/255.0,1),
+                              on_press=self.show_salary_input)
+        
         self.layout.clear_widgets()
         self.layout.add_widget(welcome_label)
         self.layout.add_widget(welcome_label2)
@@ -38,15 +38,17 @@ class FinGestApp(App):
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
         
-        self.salary_label = Label(text='Digite o seu salário', font_size = 50, bold = True, italic = True)
+        self.salary_label = Label(text='Digite o seu salário', font_size = 80, bold = True, italic = True, 
+                                  color = (245/255.0,192/255.0,11/255.0,1))
         self.salary_input = TextInput(hint_text='Insira o salário', multiline=False,  
-                                      pos_hint={"center_x": 0.5, "center_y": 0.3},
+                                      pos_hint={"center_x": 0.5, "center_y": 0.6},
                                       background_color = (176/255.0, 252/255.0, 175/255.0,1),
-                                      size_hint=(0.4, 0.4) )
+                                      size_hint=(None,None), size = (300,50) ) #alterei aqui
+        
         #botão que direciona para a interface que contém todos os cálculos exibidos
         self.submit_button = Button(text='Enviar', font_size = 50,size_hint = (0.3, 0.3),
                                     pos_hint={"center_x": 0.5, "y": self.salary_input.y + self.salary_input.height},
-                                    background_color = ( 249/255.0, 227/255.0, 5/255.0, 1),
+                                    background_color = (246/255.0,249/255.0,6/255.0,1),
                                     on_press=self.calculate_budget)
 
         self.layout.add_widget(self.salary_label)
@@ -54,40 +56,44 @@ class FinGestApp(App):
         self.layout.add_widget(self.submit_button)
 #função para exibição da tabela em si
     def calculate_budget(self, instance):
+        self.recado = Label(text = 'Insira um número válido!', font_size = 40,
+                            bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
         try:
             salary = float(self.salary_input.text)
         except ValueError:
-            return Label(text = "Tente novamente!")
+            return self.layout.add_widget(self.recado)
         
         self.layout.clear_widgets()
         
         grid = GridLayout(cols=2)
         
         #esses são os botões específicos da tabela; para adicionar mais funcionalidades ao aplicativo
-        charity_button = Button(text='Caridade ->', background_color = (245/255.0, 8/255.0, 170/255.0,1),
+        charity_button = Button(text='Caridade ->', background_color = (7/255.0, 26/255.0, 215/255.0,1),
+                                bold = True, font_size =40,
                                 on_press=lambda instance: self.show_category_caridade('Caridade', salary * 0.1))
-        investment_button = Button(text='Investimentos ->',  background_color = (245/255.0, 8/255.0, 170/255.0,1),
+        investment_button = Button(text='Investimentos ->',  background_color = (7/255.0, 26/255.0, 215/255.0,1),
+                                    bold = True,font_size =40,
                                    on_press=lambda instance: self.show_category('Investimentos', salary * 0.1))
         
         grid.add_widget(charity_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}'))
+        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}', font_size = 40, bold = True))
         grid.add_widget(investment_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}'))
+        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}', font_size = 40, bold = True))
         
         categories = ['Diversão', 'Despesas de Longo Prazo', 'Livros', 'Necessidades Básicas']
         percentages = [0.1, 0.1, 0.1, 0.5]
         
         for category, percentage in zip(categories, percentages):
-            category_label = Label(text=f'{category} ->')
-            value_label = Label(text=f'R$ {salary * percentage:.2f}')
+            category_label = Label(text=f'{category} ->', bold = True, font_size = 40)
+            value_label = Label(text=f'R$ {salary * percentage:.2f}', bold = True, font_size = 40)
             
             grid.add_widget(category_label)
             grid.add_widget(value_label)
         #botão volta para a tela inicial
         back_button = Button(text='Voltar',font_size = 30, 
-                             background_color = ( 249/255.0, 227/255.0, 5/255.0, 1),
+                             background_color = (246/255.0,249/255.0,6/255.0,1),
                              size_hint = (None, None),
-                             size = (100,50),
+                             
                              pos_hint={"x":0.1, "y":0.1}, 
                              on_press=lambda instance: self.go_back())
         self.layout.add_widget(back_button)
@@ -98,7 +104,7 @@ class FinGestApp(App):
         
         grid = GridLayout(cols=1)
         # botão volta para a tela com a tabela
-        back_button = Button(text='Voltar', background_color = ( 249/255.0, 227/255.0, 5/255.0, 1),
+        back_button = Button(text='Voltar', background_color = (246/255.0,249/255.0,6/255.0,1),
                              font_size = 30,
                              size_hint = (None, None),
                              size = (100,50),
@@ -119,7 +125,7 @@ class FinGestApp(App):
         ]
 
         for link in charity_links:
-            charity_button = Button(text=f'{link}', background_color=(169/255.0, 50/255.0, 38/255.0, 1))
+            charity_button = Button(text=f'{link}', background_color=(7/255.0, 26/255.0, 215/255.0,1))
             charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
             grid.add_widget(charity_button)
 
@@ -140,7 +146,7 @@ class FinGestApp(App):
 
         grid = GridLayout(cols=1)
         #botão volta para a tabela
-        back_button = Button(text='Voltar', background_color=(249/255.0, 227/255.0, 5/255.0, 1),
+        back_button = Button(text='Voltar', background_color=(246/255.0,249/255.0,6/255.0,1),
                              font_size = 30,
                              size_hint = (None, None),
                              size = (100,50),
@@ -160,7 +166,8 @@ class FinGestApp(App):
             ]
 
             for risk, callback in risk_buttons:
-                risk_button = Button(text=risk,background_color=(249/255.0, 227/255.0, 5/255.0, 1))
+                risk_button = Button(text=risk,background_color=(7/255.0, 26/255.0, 215/255.0,1), font_size = 40,
+                                      pos_hint = {"center_x": 0.5, "y": 0.5}, size = (700,300) )
                 risk_button.bind(on_press=lambda instance, cb=callback: cb())
                 grid.add_widget(risk_button)
 
@@ -171,7 +178,7 @@ class FinGestApp(App):
 
         grid = GridLayout(cols=1)
 
-        back_button = Button(text='Voltar', background_color=(249/255.0, 227/255.0, 5/255.0, 1),
+        back_button = Button(text='Voltar', background_color=(246/255.0,249/255.0,6/255.0,1),
                              font_size = 30,
                              size_hint = (None, None),
                              size = (100,50),
@@ -193,7 +200,7 @@ class FinGestApp(App):
                 "https://www.fundsexplorer.com.br/funds/cpts11"
             ]
             for link in investment_links:
-                investment_button = Button(text=f'{link}', background_color=(169/255.0, 50/255.0, 38/255.0, 1))
+                investment_button = Button(text=f'{link}', background_color=(7/255.0, 26/255.0, 215/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 
                 grid.add_widget(investment_button)
@@ -207,7 +214,7 @@ class FinGestApp(App):
                 "https://www.bb.com.br/site/investimentos/tesouro-direto/"
             ]
             for link in investment_links:
-                investment_button = Button(text=f'{link}',background_color=(169/255.0, 50/255.0, 38/255.0, 1))
+                investment_button = Button(text=f'{link}',background_color=(7/255.0, 26/255.0, 215/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 grid.add_widget(investment_button)
         
@@ -220,7 +227,7 @@ class FinGestApp(App):
 
         grid = GridLayout(cols=1)
 
-        back_button = Button(text='Voltar', background_color=(249/255.0, 227/255.0, 5/255.0, 1),
+        back_button = Button(text='Voltar', background_color=(246/255.0,249/255.0,6/255.0,1),
                              font_size = 30,
                              size_hint = (None, None),
                              size = (100,50),
