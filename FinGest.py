@@ -8,14 +8,13 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
-from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.floatlayout import FloatLayout
 import webbrowser 
 
 class FinGestApp(App):
     def build(self):
         Window.clearcolor = ( 5/255.0, 69/255.0, 4/255.0, 1)
-        self.layout = BoxLayout(orientation='vertical')
-        self.layout = RelativeLayout()
+        self.layout = FloatLayout()
         self.show_welcome_screen()
         return self.layout
 #tela inicial de boas-vindas
@@ -23,22 +22,20 @@ class FinGestApp(App):
         background = Image(source='FinGest.png', allow_stretch=True, keep_ratio=False)
         
         #esse botão direciona para a 2ª interface
-        start_button = Button(text='SIM!', size_hint=(0.3, 0.3),
+        start_button = Button(text='SIM!', size_hint=(0.3, 0.1),
                               font_size=45,
-                              pos_hint={"center_x": 0.5, "center_y": 0.5},
+                              pos_hint={"center_x": 0.5, "center_y": 0.1},
                               background_color=(246/255.0, 249/255.0, 6/255.0, 1),
                               on_press=self.show_salary_input)
-        start_button.pos = (Window.width / 2 - start_button.width / 2, Window.height / 2 - start_button.height / 2)
-        start_button.size = (300, 100) 
+
         
-        self.layout.clear_widgets()
-        self.layout.add_widget(start_button)
         self.layout.add_widget(background)
+        self.layout.add_widget(start_button)
 #tela pra o usuário adicionar o seu salário para análise
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
         
-        self.salary_label = Label(text='Digite o seu salário', font_size = 80, bold = True, italic = True,
+        self.salary_label = Label(text='Informe o seu salário:', font_size = 90, bold = True, italic = True,
                                   pos_hint={"center_x": 0.5, "center_y": 0.9}, 
                                   color = (245/255.0,192/255.0,11/255.0,1))
         self.salary_input = TextInput(hint_text='Insira o salário', multiline=False,  
@@ -47,10 +44,11 @@ class FinGestApp(App):
                                       size_hint=(None,None), size = (300,50) ) #alterei aqui
         
         #botão que direciona para a interface que contém todos os cálculos exibidos
-        self.submit_button = Button(text='Enviar', font_size = 50,size_hint = (0.3, 0.3),
-                                    pos_hint={"center_x": 0.5, "y": self.salary_input.y + self.salary_input.height},
+        self.submit_button = Button(text='Enviar', font_size = 50, size_hint = (0.2, 0.2),
+                                    pos_hint={"center_x": 0.5, "y": 0.200},
                                     background_color = (246/255.0,249/255.0,6/255.0,1),
                                     on_press=self.calculate_budget)
+        self.submit_button.parent = None 
 
         self.layout.add_widget(self.salary_label)
         self.layout.add_widget(self.salary_input)
@@ -91,11 +89,11 @@ class FinGestApp(App):
             grid.add_widget(category_label)
             grid.add_widget(value_label)
         #botão volta para a tela inicial
-        back_button = Button(text='Voltar',font_size = 30, 
+        back_button = Button(text='Voltar',font_size = 25, 
                              background_color = (246/255.0,249/255.0,6/255.0,1),
-                             size_hint = (None, None),
+                             size_hint = (0.07, 0.05),
                              
-                             pos_hint={"x":0.1, "y":0.1}, 
+                             pos_hint={"x":0.001, "y":0.001}, 
                              on_press=lambda instance: self.go_back())
         self.layout.add_widget(back_button)
         self.layout.add_widget(grid)
@@ -126,7 +124,11 @@ class FinGestApp(App):
         ]
 
         for link in charity_links:
-            charity_button = Button(text=f'{link}', background_color=(7/255.0, 26/255.0, 215/255.0,1))
+            charity_button = Button(text=f'{link}', 
+                                    background_color=(7/255.0, 26/255.0, 215/255.0,1),
+                                    font_size = 30,
+                                    size_hint = (5, 1)
+                                    )
             charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
             grid.add_widget(charity_button)
 
