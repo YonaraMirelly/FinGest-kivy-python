@@ -37,7 +37,7 @@ class FinGestApp(App):
         
         self.salary_label = Label(text='Informe o seu salário:', font_size = 90, bold = True, italic = True,
                                   pos_hint={"center_x": 0.5, "center_y": 0.9}, 
-                                  color = (245/255.0,192/255.0,11/255.0,1))
+                                  color = (243/255.0,156/255.0,1/255.0,1))
         self.salary_input = TextInput(hint_text='Insira o salário', multiline=False,  
                                       pos_hint={"center_x": 0.5, "center_y": 0.6},
                                       background_color = (176/255.0, 252/255.0, 175/255.0,1),
@@ -112,9 +112,13 @@ class FinGestApp(App):
                              on_press=lambda instance: self.calculate_budget(None))
         
         grid.add_widget(Label(text='"A caridade é um exercício espiritual... Quem pratica o bem, coloca em movimento as forças da alma."', 
-                              font_size = 25,
+                              font_size = 26,
+                              color = (243/255.0,156/255.0,1/255.0,1),
                               italic = True))
-        grid.add_widget(Label(text='Escolha um link e faça a sua doação:', font_size = 45, italic = True))
+        grid.add_widget(Label(text='Escolha um link e faça a sua doação:',
+                               font_size = 50, 
+                               color = (243/255.0,156/255.0,1/255.0,1),
+                               italic = True))
         charity_links = [
             "https://www.novosertao.org.br/",
             "https://www.aldeiasinfantis.org.br/",
@@ -159,7 +163,10 @@ class FinGestApp(App):
         grid.add_widget(back_button)
 
         if category == 'Investimentos':
-            risk_label = Label(text='Qual o nível de risco que você está disposto a correr?', font_size = 40)
+            risk_label = Label(text='Qual o nível de risco que você está disposto a correr?', 
+                               font_size = 40,
+                               color = (243/255.0,156/255.0,1/255.0,1),
+                               italic = True)
             grid.add_widget(risk_label)
             #questionário para conhecer o perfil do investidor
             risk_buttons = [
@@ -189,10 +196,10 @@ class FinGestApp(App):
                              on_press=lambda instance: self.show_category('Investimentos', 0))
         
         if risk_level == "Alto":
-            grid.add_widget(Label(text=f'AÇÕES', font_size = 50, italic = True, bold = True, outline_width =  10))
-            grid.add_widget(Label(text=f'ALZR11 / HGCR11 / CPTS11 ', font_size = 30, italic = True, bold = True, outline_width =  10))
+            grid.add_widget(Label(text=f'AÇÕES', font_size = 50, color = (243/255.0,156/255.0,1/255.0,1), italic = True, bold = True, outline_width =  10))
+            grid.add_widget(Label(text=f'ALZR11 / HGCR11 / CPTS11 ', font_size = 30, color = (243/255.0,156/255.0,1/255.0,1), italic = True, bold = True, outline_width =  10))
         elif risk_level == "Médio":
-            grid.add_widget(Label(text=f'TÍTULOS DO GOVERNO', font_size = 50, italic = True, bold = True, outline_width =  10))
+            grid.add_widget(Label(text=f'TÍTULOS DO GOVERNO', font_size = 50, color = (243/255.0,156/255.0,1/255.0,1), italic = True, bold = True, outline_width =  10))
             
         # para mostrar links de acordo com o nível de risco
         if risk_level == "Alto":
@@ -236,7 +243,10 @@ class FinGestApp(App):
                              size = (100,50),
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.show_category('Investimentos', 0))
-        grid.add_widget(Label(text='Deposite seu dinheiro na Poupança!', font_size = 50, italic = True, bold = True, outline_width =  10))
+        grid.add_widget(Label(text='Deposite seu dinheiro na Poupança!', 
+                              font_size = 50, 
+                              color = (243/255.0,156/255.0,1/255.0,1), 
+                              italic = True, bold = True, outline_width =  10))
         grid.add_widget(Label(text='Por que investir na Poupança?\n 1ª)É seguro e protegido; \n 2ª)É uma opção muito acessível e de fácil abertura; \n 3ª)É isenta de Imposto de Renda; \n 4ª)Oferece uma rentabilidade estável.', font_size = 40))
         grid.add_widget(Label(text='-> É a melhor opção para quem busca um investimento de baixo risco.', font_size = 35, italic = True))
         grid.add_widget(back_button)
