@@ -255,8 +255,18 @@ class FinGestApp(App):
                               font_size = 50, 
                               color = (12/255.0,212/255.0,170/255.0,1), 
                               italic = True, bold = True, outline_width =  10))
-        grid.add_widget(Label(text='Por que investir na Poupança?\n 1ª)É seguro e protegido; \n 2ª)É uma opção muito acessível e de fácil abertura; \n 3ª)É isenta de Imposto de Renda; \n 4ª)Oferece uma rentabilidade estável.', font_size = 40, color = (12/255.0,212/255.0,170/255.0,1)))
-        grid.add_widget(Label(text='-> É a melhor opção para quem busca um investimento de baixo risco.', font_size = 35, italic = True, color = (12/255.0,212/255.0,170/255.0,1)))
+        grid.add_widget(Label(text='Por que investir na Poupança?', 
+                              font_size = 40, 
+                              color = (12/255.0,212/255.0,170/255.0,1)))
+        grid.add_widget(Label(text='A poupança oferece segurança e liquidez imediata,\nideal para preservar seu capital e atender a metas de curto prazo.', 
+                              font_size = 23, 
+                              color = (12/255.0,212/255.0,170/255.0,1)))
+        grid.add_widget(Label(text='Considere diversificar no futuro, enquanto acompanhamos juntos o crescimento do seu patrimônio.', 
+                              font_size = 25, 
+                              color = (12/255.0,212/255.0,170/255.0,1)))
+        grid.add_widget(Label(text='Continue economizando com inteligência para alcançar seus objetivos financeiros!', 
+                              font_size = 25, 
+                              color = (12/255.0,212/255.0,170/255.0,1)))
         grid.add_widget(back_button)
     
         self.layout.add_widget(grid)
