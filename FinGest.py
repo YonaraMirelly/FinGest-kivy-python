@@ -17,7 +17,8 @@ class FinGestApp(App):
         self.layout = FloatLayout()
         self.show_welcome_screen()
         return self.layout
-#tela inicial de boas-vindas
+
+#tela inicial de boas-vindas      
     def show_welcome_screen(self):
         background = Image(source='FinGest_melhor.png', allow_stretch=True, keep_ratio=False)
         
