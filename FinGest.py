@@ -59,7 +59,7 @@ class FinGestApp(App):
         self.recado = Label(text = 'Insira um número válido!', font_size = 40,
                             bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
         try:
-            salary = float(self.salary_input.text)
+            salary = float(self.salary_input.text.replace(',','.'))
         except ValueError:
             return self.layout.add_widget(self.recado)
         
@@ -76,9 +76,9 @@ class FinGestApp(App):
                                    on_press=lambda instance: self.show_category('Investimentos', salary * 0.1))
         
         grid.add_widget(charity_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}', font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
+        grid.add_widget(Label(text=f'R$ {salary * 0.1:.5f}', font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
         grid.add_widget(investment_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}', font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
+        grid.add_widget(Label(text=f'R$ {salary * 0.1:.5f}', font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
         
         categories = ['Diversão',
                        'Despesas de Longo Prazo', 
@@ -88,7 +88,7 @@ class FinGestApp(App):
         
         for category, percentage in zip(categories, percentages):
             category_label = Label(text=f'{category} ->', bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
-            value_label = Label(text=f'R$ {salary * percentage:.2f}', bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
+            value_label = Label(text=f'R$ {salary * percentage:.5f}', bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
             
             grid.add_widget(category_label)
             grid.add_widget(value_label)
