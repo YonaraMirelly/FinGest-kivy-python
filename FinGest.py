@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 import webbrowser 
-import locale
+
 
 class FinGestApp(App):
     def build(self):
@@ -27,14 +27,24 @@ class FinGestApp(App):
                            
         
         #esse botão direciona para a 2ª interface
-        start_button = Button(text='Gerir Agora!', size_hint=(0.4, 0.1),
+        start_button = Button(text='Gerir Agora!', size_hint=(0.3, 0.1),
                               font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.5, "center_y": 0.1},
+                              pos_hint={"center_x": 0.5, "center_y": 0.2},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.show_salary_input)
         
+        exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
+                             font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
+                             pos_hint={"center_x": 0.5, "center_y": 0.1},
+                             background_color=(120/255.0, 5/255.0, 89/255.0, 1),
+                             on_press=self.exit_app)
+    
+        
+        
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
+        self.layout.add_widget(exit_button)
+
 #tela pra o usuário adicionar o seu salário para análise
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
@@ -282,6 +292,8 @@ class FinGestApp(App):
     def open_investment_link(self, url):
         webbrowser.open(url)
 
+    def exit_app(self, instance):
+        App.get_running_app().stop()
 
 if __name__ == '__main__':
     FinGestApp().run()
