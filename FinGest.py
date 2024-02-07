@@ -23,7 +23,7 @@ class FinGestApp(App):
     def show_welcome_screen(self):
         background = Image(source='FinGest_melhor.png', 
                            allow_stretch=True, 
-                           keep_ratio=False)
+                           keep_ratio=True)
                            
         
         #esse botão direciona para a 2ª interface
@@ -70,8 +70,9 @@ class FinGestApp(App):
         self.layout.add_widget(self.submit_button)
 #função para exibição da tabela em si
     def calculate_budget(self, instance):
-        self.recado = Label(text = 'Insira um número válido!', font_size = 40,
+        self.recado = Label(text = 'Insira APENAS números! (sem vírgula/ponto)', font_size = 40,
                             bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
+        
 
         salary_text = self.salary_input.text
 
@@ -275,7 +276,7 @@ class FinGestApp(App):
                               font_size = 50, 
                               color = (12/255.0,212/255.0,170/255.0,1), 
                               italic = True, bold = True, outline_width =  10))
-        grid.add_widget(Label(text='Por que investir na Poupança?', 
+        grid.add_widget(Label(text='Simulador da Poupança', 
                               font_size = 40, 
                               color = (12/255.0,212/255.0,170/255.0,1)))
         grid.add_widget(Label(text='A poupança oferece segurança e liquidez imediata,\nideal para preservar seu capital e atender a metas de curto prazo.', 
