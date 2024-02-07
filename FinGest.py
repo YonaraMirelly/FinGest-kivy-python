@@ -11,7 +11,7 @@ from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 import webbrowser 
 
-
+# classe principal do app
 class FinGestApp(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
@@ -32,7 +32,7 @@ class FinGestApp(App):
                               pos_hint={"center_x": 0.5, "center_y": 0.2},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.show_salary_input)
-        
+        #esse botão sai do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
                              pos_hint={"center_x": 0.5, "center_y": 0.1},
@@ -161,9 +161,11 @@ class FinGestApp(App):
 
         self.layout.add_widget(grid)
         self.layout.add_widget(back_button)
+
     #função para abrir os links de caridade
     def open_charity_link(self, url):
         webbrowser.open(url)
+        
     #função para voltar à tela inicial
     def go_back(self):
         self.layout.clear_widgets()
@@ -291,7 +293,7 @@ class FinGestApp(App):
 #para abrir os links dos investimentos
     def open_investment_link(self, url):
         webbrowser.open(url)
-
+#função pra sair do app
     def exit_app(self, instance):
         App.get_running_app().stop()
 
