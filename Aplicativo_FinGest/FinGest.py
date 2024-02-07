@@ -9,10 +9,11 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import ScreenManager, Screen
 import webbrowser 
 
 # classe principal do app
-class FinGestApp(App):
+class FinGest(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
         self.layout = FloatLayout()
@@ -45,6 +46,7 @@ class FinGestApp(App):
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)
 
+
 #tela pra o usuário adicionar o seu salário para análise
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
@@ -62,18 +64,38 @@ class FinGestApp(App):
                                     pos_hint={"center_x": 0.5, "y": 0.200},
                                     color = (159/255.0,226/255.0,191/255.0),
                                     background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                                    on_press=self.calculate_budget)
+                                    on_press=self.escolha)
         self.submit_button.parent = None 
 
         self.layout.add_widget(self.salary_label)
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
+##########################################################
+    def escolha(self, instance):
+        self.layout.clear_widgets()
+        tabela_button = Button(text='TABELA', size_hint=(0.3, 0.1),
+                              font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.5, "center_y": 0.2},
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              on_press=self.calculate_budget)
+        
+        caridade_button = Button(text='CARIDADE', size_hint=(0.3, 0.1),
+                              font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.5, "center_y": 0.1},
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              on_press=self.show_category_caridade())
+        
+        self.layout.add_widget(tabela_button)
+        self.layout.add_widget(caridade_button)
+        
+        
+
 #função para exibição da tabela em si
     def calculate_budget(self, instance):
         self.recado = Label(text = 'Insira APENAS números! (sem vírgula/ponto)', font_size = 40,
                             bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
         
-
+             
         salary_text = self.salary_input.text
 
         try:
@@ -89,7 +111,7 @@ class FinGestApp(App):
         #esses são os botões específicos da tabela; para adicionar mais funcionalidades ao aplicativo
         charity_button = Button(text='Caridade ->', background_color = (150/255.0,6/255.0,91/255.0,1),
                                 bold = True, font_size =40, color = (159/255.0,226/255.0,191/255.0,1),
-                                on_press=lambda instance: self.show_category_caridade('Caridade', salary * 0.1))
+                                on_press=self.show_category_caridade('Caridade', salary * 0.1))
         investment_button = Button(text='Investimentos ->',  background_color = (150/255.0,6/255.0,91/255.0,1),
                                     bold = True,font_size =40, color = (159/255.0,226/255.0,191/255.0,1),
                                    on_press=lambda instance: self.show_category('Investimentos', salary * 0.1))
@@ -299,4 +321,4 @@ class FinGestApp(App):
         App.get_running_app().stop()
 
 if __name__ == '__main__':
-    FinGestApp().run()
+    FinGest().run()
