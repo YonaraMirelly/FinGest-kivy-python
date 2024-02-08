@@ -9,7 +9,6 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
 import webbrowser 
 
 # classe principal do app
@@ -21,6 +20,7 @@ class FinGest(App):
         return self.layout
 
 #tela inicial de boas-vindas      
+
     def show_welcome_screen(self):
         background = Image(source='FinGest_melhor.png', 
                            allow_stretch=True, 
@@ -40,12 +40,9 @@ class FinGest(App):
                              background_color=(120/255.0, 5/255.0, 89/255.0, 1),
                              on_press=self.exit_app)
     
-        
-        
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
-        self.layout.add_widget(exit_button)
-
+        self.layout.add_widget(exit_button)   
 
 #tela pra o usuário adicionar o seu salário para análise
     def show_salary_input(self, instance):
@@ -70,25 +67,52 @@ class FinGest(App):
         self.layout.add_widget(self.salary_label)
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
+
 ##########################################################
+        
     def escolha(self, instance):
         self.layout.clear_widgets()
+
+        background = Image(source='Fundo_escolha.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        
         tabela_button = Button(text='TABELA', size_hint=(0.3, 0.1),
-                              font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.5, "center_y": 0.2},
+                              font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.4, "center_y": 0.7},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.calculate_budget)
         
-        caridade_button = Button(text='CARIDADE', size_hint=(0.3, 0.1),
-                              font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.5, "center_y": 0.1},
+        caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
+                              font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.4, "center_y": 0.5},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press=self.show_category_caridade())
+                              on_press= lambda instance: self.show_category_caridade(None))
         
+        investimento_button = Button(text='INVESTIMENTOS', size_hint=(0.3, 0.1),
+                              font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.4, "center_y": 0.3},
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              on_press= lambda instance: self.show_category('Investimentos', None))
+        
+        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                             font_size = 30,
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (None, None),
+                             size = (100,50),
+                             pos_hint={"x":0, "y":0},
+                             on_press=lambda instance: self.go_back())
+        
+        self.layout.add_widget(background)
         self.layout.add_widget(tabela_button)
         self.layout.add_widget(caridade_button)
-        
-        
+        self.layout.add_widget(investimento_button)
+        self.layout.add_widget(back_button)
+               
+    #função para voltar à tela inicial
+    def go_back(self):
+        self.layout.clear_widgets()
+        self.show_welcome_screen()
 
 #função para exibição da tabela em si
     def calculate_budget(self, instance):
@@ -108,24 +132,14 @@ class FinGest(App):
         grid = GridLayout(cols=2)
         
         
-        #esses são os botões específicos da tabela; para adicionar mais funcionalidades ao aplicativo
-        charity_button = Button(text='Caridade ->', background_color = (150/255.0,6/255.0,91/255.0,1),
-                                bold = True, font_size =40, color = (159/255.0,226/255.0,191/255.0,1),
-                                on_press=self.show_category_caridade('Caridade', salary * 0.1))
-        investment_button = Button(text='Investimentos ->',  background_color = (150/255.0,6/255.0,91/255.0,1),
-                                    bold = True,font_size =40, color = (159/255.0,226/255.0,191/255.0,1),
-                                   on_press=lambda instance: self.show_category('Investimentos', salary * 0.1))
-        
-        grid.add_widget(charity_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}'.replace('.',','), font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
-        grid.add_widget(investment_button)
-        grid.add_widget(Label(text=f'R$ {salary * 0.1:.2f}'.replace('.',','), font_size = 40, color = (159/255.0,226/255.0,191/255.0,1), bold = True))
-        
-        categories = ['Diversão',
-                       'Despesas de Longo Prazo', 
-                       'Livros', 
-                       'Necessidades Básicas']
-        percentages = [0.1, 0.1, 0.1, 0.5]
+        #essas são as categorias
+        categories = ['10% Caridade',
+                      '10% Investimentos',
+                      '10% Diversão',
+                       '10% Despesas de Longo Prazo', 
+                       '10% Livros', 
+                       '50% Necessidades Básicas']
+        percentages = [0.1, 0.1, 0.1, 0.1, 0.1, 0.5]
         
         for category, percentage in zip(categories, percentages):
             category_label = Label(text=f'{category} ->', bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
@@ -139,11 +153,13 @@ class FinGest(App):
                              color = (159/255.0,226/255.0,191/255.0),
                              size_hint = (0.07, 0.05),
                              pos_hint={"x":0.001, "y":0.001}, 
-                             on_press=lambda instance: self.go_back())
+                             on_press=lambda instance: self.escolha(None))
+        
         self.layout.add_widget(back_button)
         self.layout.add_widget(grid)
+
     #interface do botão "caridade"
-    def show_category_caridade(self, category, amount):
+    def show_category_caridade(self, instance):
         self.layout.clear_widgets()
         
         grid = GridLayout(cols=1)
@@ -154,8 +170,7 @@ class FinGest(App):
                              size_hint = (None, None),
                              size = (100,50),
                              pos_hint={"x":0, "y":0},
-                             
-                             on_press=lambda instance: self.calculate_budget(None))
+                             on_press=lambda instance: self.escolha(None))
         
         grid.add_widget(Label(text='"A caridade é um exercício espiritual... Quem pratica o bem, coloca em movimento as forças da alma."', 
                               font_size = 26,
@@ -188,12 +203,6 @@ class FinGest(App):
     #função para abrir os links de caridade
     def open_charity_link(self, url):
         webbrowser.open(url)
-        
-    #função para voltar à tela inicial
-    def go_back(self):
-        self.layout.clear_widgets()
-        self.show_welcome_screen()
-
 
     #função da tela "investimentos"
     def show_category(self, category, amount):
@@ -207,7 +216,7 @@ class FinGest(App):
                              size_hint = (None, None),
                              size = (100,50),
                              pos_hint={"x":0, "y":0},
-                             on_press=lambda instance: self.calculate_budget(None))
+                             on_press=lambda instance: self.escolha(None))
         
         grid.add_widget(back_button)
 
