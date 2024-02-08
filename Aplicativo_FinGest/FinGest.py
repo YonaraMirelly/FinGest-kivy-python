@@ -22,7 +22,7 @@ class FinGest(App):
 #tela inicial de boas-vindas      
 
     def show_welcome_screen(self):
-        background = Image(source='FinGest_melhor.png', 
+        background = Image(source='FinGest_introduçao.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
                            
@@ -48,11 +48,12 @@ class FinGest(App):
     def show_salary_input(self, instance):
         self.layout.clear_widgets()
         
-        self.salary_label = Label(text='Informe o seu salário:', font_size = 90, bold = True, italic = True,
-                                  pos_hint={"center_x": 0.5, "center_y": 0.9}, 
-                                  color = (12/255.0,212/255.0,170/255.0,1))
+        background = Image(source='FinGest_input.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        
         self.salary_input = TextInput(hint_text='Insira o salário', multiline=False,  
-                                      pos_hint={"center_x": 0.5, "center_y": 0.6},
+                                      pos_hint={"center_x": 0.5, "center_y": 0.5},
                                       background_color = (176/255.0, 252/255.0, 175/255.0,1),
                                       size_hint=(None,None), size = (300,50) ) #alterei aqui
         
@@ -64,7 +65,7 @@ class FinGest(App):
                                     on_press=self.escolha)
         self.submit_button.parent = None 
 
-        self.layout.add_widget(self.salary_label)
+        self.layout.add_widget(background)
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
 
@@ -73,19 +74,25 @@ class FinGest(App):
     def escolha(self, instance):
         self.layout.clear_widgets()
 
-        background = Image(source='Fundo_escolha.png', 
+        background = Image(source='FinGest_escolha.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
         
         tabela_button = Button(text='TABELA', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.7},
+                              pos_hint={"center_x": 0.4, "center_y": 0.75},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.calculate_budget)
         
+        Despesas_mes_button = Button(text='DESPESAS', size_hint=(0.3, 0.1),
+                              font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.4, "center_y": 0.6},
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              on_press= lambda instance: self.show_category_caridade(None))
+        
         caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.5},
+                              pos_hint={"center_x": 0.4, "center_y": 0.45},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.show_category_caridade(None))
         
@@ -105,6 +112,7 @@ class FinGest(App):
         
         self.layout.add_widget(background)
         self.layout.add_widget(tabela_button)
+        self.layout.add_widget(Despesas_mes_button)
         self.layout.add_widget(caridade_button)
         self.layout.add_widget(investimento_button)
         self.layout.add_widget(back_button)
