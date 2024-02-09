@@ -9,6 +9,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.screenmanager import Screen
 import os
 import json
 import webbrowser 
@@ -21,6 +23,7 @@ class FinGest(App):
         self.load_expenses() #carrega as despesas salvas
         self.show_welcome_screen()
         return self.layout
+      
   
 #função para tela inicial de boas-vindas  
     def show_welcome_screen(self):
@@ -81,27 +84,33 @@ class FinGest(App):
         
         tabela_button = Button(text='TABELA', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.75},
+                              pos_hint={"center_x": 0.4, "center_y": 0.82},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.calculate_budget)
         
         Despesas_mes_button = Button(text='DESPESAS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.6},
+                              pos_hint={"center_x": 0.4, "center_y": 0.67},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.despesas(None))
         
         caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.45},
+                              pos_hint={"center_x": 0.4, "center_y": 0.52},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.show_category_caridade(None))
         
         investimento_button = Button(text='INVESTIMENTOS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.3},
+                              pos_hint={"center_x": 0.4, "center_y": 0.37},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.show_category('Investimentos', None))
+        
+        quiz_button = Button(text='QUIZ', size_hint=(0.3, 0.1),
+                              font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
+                              pos_hint={"center_x": 0.4, "center_y": 0.22},
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              on_press= lambda instance: self.PopQuizLayout(None))
         
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -116,6 +125,7 @@ class FinGest(App):
         self.layout.add_widget(Despesas_mes_button)
         self.layout.add_widget(caridade_button)
         self.layout.add_widget(investimento_button)
+        self.layout.add_widget(quiz_button)
         self.layout.add_widget(back_button)
                
 #função para voltar à tela inicial
@@ -138,7 +148,7 @@ class FinGest(App):
         self.layout.clear_widgets()
         
         grid = GridLayout(cols=2)
-        background = Image(source='FinGest_tabela.png', 
+        background = Image(source='FinGest_t.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
         
@@ -149,7 +159,7 @@ class FinGest(App):
         
         for category, percentage in zip(categories, percentages):
             category_label = Label(text=f'{category}')
-            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 55, color = (159/255.0,226/255.0,191/255.0,1))
+            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
             
             grid.add_widget(category_label)
             grid.add_widget(value_label)
@@ -407,6 +417,86 @@ class FinGest(App):
 #para abrir os links dos investimentos
     def open_investment_link(self, url):
         webbrowser.open(url)
+
+
+questions = [
+    {
+        "question": "What is the smallest country in the world?",
+        "possible_answers": ["Vatican City", "Monaco", "San Marino", "Liechtenstein"],
+        "correct_answer": "Vatican City"
+    },
+    {
+        "question": "What is the highest mountain in the world?",
+        "possible_answers": ["Mount Kilimanjaro","Mount Everest", "Mount McKinley", "Mount Fuji"],
+        "correct_answer": "Mount Everest"
+    },
+    {
+        "question": "Who invented the telephone?",
+        "possible_answers": ["Thomas Edison", "Nikola Tesla", "Guglielmo Marconi", "Alexander Graham Bell"],
+        "correct_answer": "Alexander Graham Bell"
+    },
+]
+
+
+game_state = {
+    "question_index": 0,
+    "score": 0
+}
+
+
+class PopQuizLayout(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.next_question()
+
+
+    def next_question(self):
+        question_index = game_state["question_index"]
+
+        if question_index >= len(questions): 
+            self.game_over() 
+            return
+
+        current_question = questions[question_index]
+        self.ids.question_count.text = f"Q: {question_index+1}/{len(questions)}"
+        self.ids.question_text.text = current_question["question"]
+        for i in range(4):
+            self.ids[f"answer_btn_{i+1}"].text = current_question["possible_answers"][i]
+
+        game_state["question_index"] += 1
+
+    def game_over(self):
+        self.ids.question_text.text = f"Game Over! Your Score: {game_state['score']}/{len(questions)}"
+        self.ids.answer_grid.clear_widgets()
+        self.ids.answer_grid.add_widget(Button(text="Retry", on_press=self.start_over))
+
+    def answer_callback(self, answer):
+        def func(_):
+            return self.answer_handler(answer)
+        return func
+
+    def start_over(self, _):
+        self.ids.answer_grid.clear_widgets()
+        for i in range(4):
+            button = Button(text="Loading text...", on_press=self.answer_callback(i+1))
+            self.ids[f"answer_btn_{i+1}"] = button
+            self.ids.answer_grid.add_widget(button)
+
+        game_state["question_index"] = 0
+        game_state["score"] = 0
+
+        self.next_question()
+
+    def answer_handler(self, answer):
+        question_index = game_state["question_index"]-1
+        if questions[question_index]["correct_answer"] == questions[question_index]["possible_answers"][answer-1]:
+            game_state["score"] += 1
+
+        self.next_question()
+
+class PopQuizApp(App):
+    def build(self):
+        return PopQuizLayout()  
 
 #função pra sair do app
     def exit_app(self, instance):

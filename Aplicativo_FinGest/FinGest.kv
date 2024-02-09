@@ -1,21 +1,64 @@
-<WelcomeScreen>:
+#:import utils kivy.utils
+
+<Button>:
+    font_size: 22
+    background_color: utils.get_color_from_hex("#41aee3")
+    background_normal: ""
+    color: 1,1,1,1
+    text: "Loading text..."
+
+<PopQuizLayout>:
+    orientation: "vertical"
+    padding: 40
+    spacing: 20
+
     BoxLayout:
-        orientation: "vertical"
-        ScrollView:
-            do_scroll_x: True
+        orientation: "horizontal"
+
+        AnchorLayout:
+            anchor_x: "left"
             BoxLayout:
-                orientation: "vertical"
-                size_hint_y: None
-                height: self.minimum_height
+                orientation: "horizontal"
+                size_hint_x: 0.5
                 Image:
-                    source: 'FinGest_melhor.png'
-                    allow_stretch: True
-                    keep_ratio: True
-                Button:
-                    text: 'Gerir Agora!'
-                    size_hint: (0.3, 0.1)
-                    font_size: 45
-                    color: (159/255.0, 226/255.0, 191/255.0, 1)
-                    pos_hint: {"center_x": 0.5}
-                    background_color: (118/255.0, 215/255.0, 196/255.0, 1)
-                    on_press: app.root.get_screen('welcome').show_salary_input(root)
+                    source: "popquiz-logo.png"
+
+        AnchorLayout:
+            anchor_x: "right"
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_x: 0.5
+                Label:
+                    text: "Q: Loading.../3"
+                    id: question_count
+                    font_size: 20
+                    bold: True
+                    italic: True
+
+    Label:
+        id: question_text
+        text: "Loading question..."
+        bold: True
+        font_size: 32
+        color: utils.get_color_from_hex("#ff4762")
+
+    GridLayout:
+        id: answer_grid
+        cols: 2
+        spacing: 10
+
+        Button:
+            id: answer_btn_1
+            on_press: root.answer_handler(1)
+
+        Button:
+            id: answer_btn_2
+            on_press: root.answer_handler(2)
+
+        Button:
+            id: answer_btn_3
+            on_press: root.answer_handler(3)
+            
+        Button:
+            id: answer_btn_4
+            on_press: root.answer_handler(4)
