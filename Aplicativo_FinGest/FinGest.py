@@ -128,7 +128,6 @@ class FinGest(App):
         self.recado = Label(text = 'Insira APENAS números! (sem vírgula/ponto)', font_size = 40,
                             bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
         
-             
         salary_text = self.salary_input.text
 
         try:
@@ -139,20 +138,18 @@ class FinGest(App):
         self.layout.clear_widgets()
         
         grid = GridLayout(cols=2)
+        background = Image(source='FinGest_tabela.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
         
         
         #essas são as categorias
-        categories = ['10% Caridade',
-                      '10% Investimentos',
-                      '10% Diversão',
-                       '10% Despesas de Longo Prazo', 
-                       '10% Livros', 
-                       '50% Necessidades Básicas']
-        percentages = [0.1, 0.1, 0.1, 0.1, 0.1, 0.5]
+        categories = ['','','','','','']
+        percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
         
         for category, percentage in zip(categories, percentages):
-            category_label = Label(text=f'{category} ->', bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
-            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
+            category_label = Label(text=f'{category}')
+            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 55, color = (159/255.0,226/255.0,191/255.0,1))
             
             grid.add_widget(category_label)
             grid.add_widget(value_label)
@@ -164,6 +161,7 @@ class FinGest(App):
                              pos_hint={"x":0.001, "y":0.001}, 
                              on_press=lambda instance: self.escolha(None))
         
+        self.layout.add_widget(background)
         self.layout.add_widget(back_button)
         self.layout.add_widget(grid)
 
@@ -231,8 +229,44 @@ class FinGest(App):
 #interface do botão "caridade"
     def show_category_caridade(self, instance):
         self.layout.clear_widgets()
+
+        background = Image(source='FinGest_caridade.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        self.layout.add_widget(background)
+
+        grid = GridLayout(cols=2)
         
-        grid = GridLayout(cols=1)
+        charity_links = [
+            "https://www.novosertao.org.br",
+            "https://www.aldeiasinfantis.org.br",
+            "https://aacd.org.br",
+            "https://habitatbrasil.org.br/quem-somos/nossa-historia",
+            "https://doe.msf.org.br"
+        ]
+
+        # Adicionando os botões à esquerda da tela
+        # Adicionando os botões à esquerda da tela
+        for i, link in enumerate(charity_links[:5]):
+            charity_button = Button(text=f'{link}', 
+                                background_color=(7/255.0, 26/255.0, 215/255.0, 1),
+                                font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
+                                size_hint=(None, None), size=(200, 50),
+                                pos=(self.layout.width * 0.2, self.layout.height * (0.7 - i * 0.1)))
+            charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
+            grid.add_widget(charity_button)
+
+    
+        # Adicionando os botões à direita da tela
+        for i, link in enumerate(charity_links[5:]):
+            charity_button = Button(text=f'{link}', 
+                                background_color=(7/255.0, 26/255.0, 215/255.0, 1),
+                                font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
+                                size_hint=(None, None), size=(200, 50),
+                                pos=(self.layout.width * 0.7, self.layout.height * (0.7 - i * 0.1)))
+            charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
+            grid.add_widget(charity_button)
+
         # botão volta para a tela com a tabela
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -241,31 +275,6 @@ class FinGest(App):
                              size = (100,50),
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.escolha(None))
-        
-        grid.add_widget(Label(text='"A caridade é um exercício espiritual... Quem pratica o bem, coloca em movimento as forças da alma."', 
-                              font_size = 26,
-                              color = (12/255.0,212/255.0,170/255.0,1),
-                              italic = True, bold = True))
-        grid.add_widget(Label(text='Escolha um link e faça a sua doação:',
-                               font_size = 50, 
-                               color = (12/255.0,212/255.0,170/255.0,1),
-                               italic = True, bold = True))
-        charity_links = [
-            "https://www.novosertao.org.br/",
-            "https://www.aldeiasinfantis.org.br/",
-            "https://aacd.org.br/",
-            "https://habitatbrasil.org.br/quem-somos/nossa-historia/",
-            "https://doe.msf.org.br/"
-        ]
-
-        for link in charity_links:
-            charity_button = Button(text=f'{link}', 
-                                    background_color=(7/255.0, 26/255.0, 215/255.0,1),
-                                    font_size = 30, color = (159/255.0,226/255.0,191/255.0,1),
-                                    size_hint = (5, 1)
-                                    )
-            charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
-            grid.add_widget(charity_button)
 
         self.layout.add_widget(grid)
         self.layout.add_widget(back_button)
