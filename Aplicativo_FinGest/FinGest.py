@@ -9,6 +9,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
+import os
+import json
 import webbrowser 
 
 # classe principal do app
@@ -16,11 +18,11 @@ class FinGest(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
         self.layout = FloatLayout()
+        self.load_expenses() #carrega as despesas salvas
         self.show_welcome_screen()
         return self.layout
-
-#tela inicial de boas-vindas      
-
+  
+#função para tela inicial de boas-vindas  
     def show_welcome_screen(self):
         background = Image(source='FinGest_introduçao.png', 
                            allow_stretch=True, 
@@ -69,8 +71,7 @@ class FinGest(App):
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
 
-##########################################################
-        
+#função para escolher entre - tabela, despesa, doação e investimentos        
     def escolha(self, instance):
         self.layout.clear_widgets()
 
@@ -88,7 +89,7 @@ class FinGest(App):
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.4, "center_y": 0.6},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press= lambda instance: self.show_category_caridade(None))
+                              on_press= lambda instance: self.despesas(None))
         
         caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
@@ -117,7 +118,7 @@ class FinGest(App):
         self.layout.add_widget(investimento_button)
         self.layout.add_widget(back_button)
                
-    #função para voltar à tela inicial
+#função para voltar à tela inicial
     def go_back(self):
         self.layout.clear_widgets()
         self.show_welcome_screen()
@@ -166,7 +167,68 @@ class FinGest(App):
         self.layout.add_widget(back_button)
         self.layout.add_widget(grid)
 
-    #interface do botão "caridade"
+#função para criar o arquivo json
+    def load_expenses(self):
+        if os.path.exists("expenses.json"):
+            with open("expenses.json", "r") as f:
+                self.expense_values = json.load(f)
+        else:
+            self.expense_values = [""] * 20
+
+#função para abrir o arquivo json
+    def save_expenses(self):
+        with open("expenses.json", "w") as f:
+            json.dump(self.expense_values, f)
+
+#função para exibir os inputs em formato de lista
+    def despesas(self, instance):
+        # Limpar widgets da tela atual
+        self.layout.clear_widgets()
+        background = Image(source='FinGest_despesas.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        self.layout.add_widget(background)
+
+        back_button = Button(text='Voltar',font_size = 25, 
+                             background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (0.07, 0.05),
+                             pos_hint={"x":0.001, "y":0.001}, 
+                             on_press=lambda instance: self.escolha(None))
+        self.layout.add_widget(back_button)
+
+        self.expense_inputs = []  # Lista para armazenar os TextInput de despesas
+
+        # Adiciona os TextInput de despesas ao layout
+        for i in range(10):
+            expense_input = TextInput(hint_text='R$00,00 - CURTO PRAZO', multiline=False,
+                                      pos_hint={"center_x": 0.30, "center_y": 0.8 - i * 0.08},
+                                      background_color=(176/255.0, 252/255.0, 175/255.0, 1),
+                                      size_hint=(None, None), size=(350, 50),
+                                      text=self.expense_values[i])  # Carrega o valor salvo
+            expense_input.bind(text=lambda instance, value, index=i: self.update_expense_value(index, value))  # Atualiza o valor na lista quando houver mudança
+            self.expense_inputs.append(expense_input)
+            self.layout.add_widget(expense_input)
+
+        for i in range(10):
+            expense_input = TextInput(hint_text='R$00,00 - LONGO PRAZO', multiline=False,
+                                      pos_hint={"center_x": 0.7, "center_y": 0.8 - i * 0.08},
+                                      background_color=(176/255.0, 252/255.0, 175/255.0, 1),
+                                      size_hint=(None, None), size=(350, 50),
+                                      text=self.expense_values[i + 10])  # Carrega o valor salvo
+            expense_input.bind(text=lambda instance, value, index=i+10: self.update_expense_value(index, value))  # Atualiza o valor na lista quando houver mudança
+            self.expense_inputs.append(expense_input)
+            self.layout.add_widget(expense_input)
+
+        return self.layout
+
+#função pra salvar os inputs
+    def update_expense_value(self, index, value):
+        if index < len(self.expense_values):
+            self.expense_values[index] = value
+            self.save_expenses()
+        
+#interface do botão "caridade"
     def show_category_caridade(self, instance):
         self.layout.clear_widgets()
         
@@ -208,11 +270,11 @@ class FinGest(App):
         self.layout.add_widget(grid)
         self.layout.add_widget(back_button)
 
-    #função para abrir os links de caridade
+#função para abrir os links de caridade
     def open_charity_link(self, url):
         webbrowser.open(url)
 
-    #função da tela "investimentos"
+#função da tela "investimentos"
     def show_category(self, category, amount):
         self.layout.clear_widgets()
 
@@ -248,7 +310,8 @@ class FinGest(App):
                 grid.add_widget(risk_button)
 
         self.layout.add_widget(grid)
-    #função de acordo com a escolha do investidor (botão)
+
+#função de acordo com a escolha do investidor (botão)
     def show_investment_links(self, risk_level):
         self.layout.clear_widgets()
 
@@ -298,6 +361,7 @@ class FinGest(App):
 
         grid.add_widget(back_button)
         self.layout.add_widget(grid)
+
 #função para pequeno risco - é mais um conselho
     def show_savings_advice(self):
         self.layout.clear_widgets()
@@ -330,9 +394,11 @@ class FinGest(App):
         grid.add_widget(back_button)
     
         self.layout.add_widget(grid)
+
 #para abrir os links dos investimentos
     def open_investment_link(self, url):
         webbrowser.open(url)
+
 #função pra sair do app
     def exit_app(self, instance):
         App.get_running_app().stop()
