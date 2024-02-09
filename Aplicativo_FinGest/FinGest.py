@@ -444,7 +444,7 @@ game_state = {
 }
 
 
-class PopQuizLayout(BoxLayout):
+class PopQuizLayout(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.next_question()
