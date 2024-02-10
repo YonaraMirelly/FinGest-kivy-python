@@ -43,7 +43,7 @@ class FinGest(App):
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
                              pos_hint={"center_x": 0.5, "center_y": 0.1},
                              background_color=(120/255.0, 5/255.0, 89/255.0, 1),
-                             on_press=self.exit_app)
+                             on_press=App.get_running_app().stop)
     
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
@@ -110,7 +110,7 @@ class FinGest(App):
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.4, "center_y": 0.22},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press= lambda instance: self.PopQuizLayout(None))
+                              on_press=self.next_question())
         
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -499,8 +499,8 @@ class PopQuizApp(App):
         return PopQuizLayout()  
 
 #função pra sair do app
-    def exit_app(self, instance):
-        App.get_running_app().stop()
+    #def exit_app(self, instance):
+        #App.get_running_app().stop()
 
 if __name__ == '__main__':
     FinGest().run()
