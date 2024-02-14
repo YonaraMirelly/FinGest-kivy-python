@@ -29,6 +29,10 @@ class FinGest(App):
         super().__init__(**kwargs)
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.test_completed = False  # Variável de estado para rastrear se o teste foi concluído
+
       
   
 #função para tela inicial de boas-vindas  
@@ -339,11 +343,12 @@ class FinGest(App):
 
 #função da tela "investimentos"
     def start_investment_profile_test(self, instance):
-        self.layout.clear_widgets()
+        if not self.test_completed: # Verifique se o teste já foi realizado
+            self.layout.clear_widgets()
 
-        grid = GridLayout(cols=1)
+            grid = GridLayout(cols=1)
         
-        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+            back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
                              color = (159/255.0,226/255.0,191/255.0),
                              size_hint = (None, None),
@@ -351,17 +356,20 @@ class FinGest(App):
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.escolha(None))
         
-        grid.add_widget(back_button)
+            grid.add_widget(back_button)
         
 
-        self.questions = [
+            self.questions = [
             ("Qual é o seu horizonte de investimento?", ["Curto prazo", "Médio prazo", "Longo prazo"]),
             ("Qual é a sua tolerância ao risco?", ["Baixa", "Média", "Alta"]),
             ("Qual é o seu objetivo financeiro principal?", ["Preservação de capital", "Crescimento moderado", "Crescimento máximo"]),
-        ]
-        self.answers = []
-        self.show_question(0)
+            ]
+            self.answers = []
+            self.show_question(0)
         #botão volta para a tabela
+        else:
+        # Se o teste já foi concluído, vá diretamente para a tela de resultado
+            self.show_investment_advice(self.get_saved_risk_level())
         
 
     def show_question(self, question_index):
@@ -400,6 +408,7 @@ class FinGest(App):
             self.layout.clear_widgets()
             self.process_answers()
 
+
     def process_answers(self):
         score = 0
         for answer in self.answers:
@@ -416,13 +425,16 @@ class FinGest(App):
             risk_level = "Moderado"
         else:
             risk_level = "Arrojado"
-            
-
+        
+        self.save_risk_level(risk_level)
+        # Marque o teste como concluído
+        self.test_completed = True
+        # Exiba o resultado
         self.show_investment_advice(risk_level)
 
     def show_investment_advice(self, risk_level):
         self.layout.clear_widgets()
-        grid = GridLayout(cols=1, padding=(470, 400), spacing=20)
+        grid = GridLayout(cols=1, padding=(490, 420), spacing=20)
 
 
         if risk_level == "Conservador":
@@ -430,12 +442,49 @@ class FinGest(App):
                            allow_stretch=True, 
                            keep_ratio=True)
             self.layout.add_widget(background)
+            investment_links = [
+                "https://www.idinheiro.com.br/calculadoras/calculadora-rendimento-da-poupanca/",
+                "https://www.santander.com.br/investimentos-e-previdencia/poupanca",
+                "https://www.itau.com.br/investimentos/poupanca",
+                "https://www.bb.com.br/site/investimentos/poupanca/?gad_source=1&gclid=Cj0KCQiA5rGuBhCnARIsAN11vgShYtpmN2AEshCZYgt0yrl1jMtZu4OVl3ypXVxuFo2vTDlxpmFF8NsaAjchEALw_wcB"
+            ]
+            invest_names = [
+            "SIMULADOR",
+            "SANTANDER",
+            "ITAÚ",
+            "BB"]
+            for name, link in zip(invest_names, investment_links):
+                investment_button = Button(text=name, font_size=30, size_hint=(None, None), 
+                                           color = (174/255.0,214/255.0,241/255.0,1),
+                                           size=(200, 100),
+                                           background_color=(118/255.0, 215/255.0, 296/255.0,1))
+                investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
+                grid.add_widget(investment_button)
+
 
         elif risk_level == "Moderado":
             background = Image(source='FinGest_moderado.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
             self.layout.add_widget(background)
+            investment_links = [
+                "https://www.tesourodireto.com.br/titulos/precos-e-taxas.htm",
+                "https://www.bb.com.br/site/investimentos/tesouro-direto/?gad_source=1&gclid=Cj0KCQiA5rGuBhCnARIsAN11vgR4QMaW8rfQDKNpZxZE0buaBaqRwY6YKONqsmrKeAw0T4Ypp3ODdEUaAuTcEALw_wcB",
+                "https://www.caixa.gov.br/voce/poupanca-e-investimentos/tesouro-direto/Paginas/default.aspx",
+                "https://www.agorainvestimentos.com.br/html/investimentos/renda-fixa/tesouro-direto.html"
+            ]
+            invest_names = [
+            "SIMULADOR",
+            "BB",
+            "CAIXA",
+            "ÁGORA"]
+            for name, link in zip(invest_names, investment_links):
+                investment_button = Button(text=name, font_size=30, size_hint=(None, None), 
+                                           color = (174/255.0,214/255.0,241/255.0,1),
+                                           size=(200, 100),
+                                           background_color=(118/255.0, 215/255.0, 296/255.0,1))
+                investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
+                grid.add_widget(investment_button)
 
         elif risk_level == "Arrojado":
             background = Image(source='FinGest_arrojado.png', 
@@ -443,19 +492,25 @@ class FinGest(App):
                            keep_ratio=True)
             self.layout.add_widget(background)
             investment_links = [
-                "https://www.fundsexplorer.com.br/funds/alzr11",
-                "https://www.fundsexplorer.com.br/funds/hgcr11",
-                "https://www.fundsexplorer.com.br/funds/cpts11"
+                "https://investnews.com.br/ferramentas/simuladores/simulador-carteira-de-acoes/",
+                "https://www.xpi.com.br/produtos/acoes/",
+                "https://www.nuinvest.com.br/",
+                "https://www.rico.com.vc/produtos/fundos-imobiliarios/?campaignid=18578302741&adgroupid=161839022784&feeditemid=&targetid=aud-896835459498:kwd-900845052163&loc_interest_ms=&loc_physical_ms=1031556&matchtype=b&network=g&device=c&devicemodel=&ifmobile=&ifmobile=0&ifsearch=1&ifsearch=&ifcontent=0&ifcontent=&creative=678627166745&keyword=comprar%20cotas%20fundo%20imobiliario&placement=&target=&utm_source=google&utm_medium=cpc&utm_term=comprar%20cotas%20fundo%20imobiliario&utm_campaign=GGLE_PESQ_Brand_Geral&hsa_tgt=aud-896835459498:kwd-900845052163&hsa_net=adwords&hsa_kw=comprar%20cotas%20fundo%20imobiliario&hsa_grp=161839022784&hsa_acc=7134496929&hsa_ver=3&hsa_ad=678627166745&hsa_cam=312991906&hsa_mt=b&hsa_src=g&gclid=Cj0KCQiA5rGuBhCnARIsAN11vgRqK4rjkQ6WukQ3VJCStwmp1u8fdYmT4z9OrUzp-ib7LE2H8-bzaOsaAhSmEALw_wcB"
             ]
-            for link in investment_links:
-                investment_button = Button(text=f'{link}', font_size=30, size_hint=(None, None), 
+            invest_names = [
+            "SIMULADOR",
+            "XP - ações",
+            "NUInvest",
+            "RICO - FIIs"]
+            for name, link in zip(invest_names, investment_links):
+                investment_button = Button(text=name, font_size=30, size_hint=(None, None), 
                                            color = (174/255.0,214/255.0,241/255.0,1),
-                                           size=(250, 150),
+                                           size=(200, 100),
                                            background_color=(118/255.0, 215/255.0, 296/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 grid.add_widget(investment_button)
 
-        self.layout.add_widget(grid) 
+        self.layout.add_widget(grid)
 
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -466,6 +521,29 @@ class FinGest(App):
                              on_press=lambda instance: self.escolha(None))
         self.layout.add_widget(back_button)
 
+        if self.test_completed:
+            redo_button = Button(text='Refazer teste', background_color=(84/255.0, 255/255.0, 4/255.0, 1),
+                         font_size=30,
+                         color=(159/255.0, 226/255.0, 191/255.0),
+                         size_hint=(None, None),
+                         size=(200, 50),
+                         pos_hint={"center_x": 0.92},
+                         on_press=lambda instance: self.reset_test())
+            self.layout.add_widget(redo_button)
+
+    def get_saved_risk_level(self):
+        # Aqui você implementaria a lógica para recuperar o nível de risco salvo (por exemplo, de um arquivo ou banco de dados)
+        return self.saved_risk_level
+    
+    def save_risk_level(self, risk_level):
+        # Aqui você implementaria a lógica para salvar o nível de risco (por exemplo, em um arquivo ou banco de dados)
+        self.saved_risk_level = risk_level
+    
+    #função para refazer o teste_investidor
+    def reset_test(self):
+        self.test_completed = False
+        self.saved_risk_level = None
+        self.start_investment_profile_test(None)
 
     def open_investment_link(self, url):
         webbrowser.open(url)
