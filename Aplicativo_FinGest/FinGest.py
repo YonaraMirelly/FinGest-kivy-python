@@ -9,12 +9,12 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 import os
 import json
 import webbrowser 
+from kivy.clock import Clock
 
 # classe principal do app
 class FinGest(App):
@@ -24,16 +24,12 @@ class FinGest(App):
         self.load_expenses() #carrega as despesas salvas
         self.show_welcome_screen()
         return self.layout
-    
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.test_completed = False  # Variável de estado para rastrear se o teste foi concluído
-
-      
+        self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+    
   
 #função para tela inicial de boas-vindas  
     def show_welcome_screen(self):
@@ -139,19 +135,20 @@ class FinGest(App):
 
 #função para exibição da tabela em si
     def calculate_budget(self, instance):
-        self.recado = Label(text = 'Insira APENAS números! (sem vírgula/ponto)', font_size = 40,
-                            bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
-        
         salary_text = self.salary_input.text
 
         try:
             salary = float(salary_text)
         except ValueError:
-            return self.layout.add_widget(self.recado)
+            self.layout.clear_widgets()  # Limpa os widgets anteriores
+            self.layout.add_widget(Label(text='Insira APENAS números! (sem vírgula/ponto)', 
+                                          font_size=40, color=(236/255.0, 5/255.0, 5/255.0, 1)))
+            Clock.schedule_once(self.show_salary_input, 2)  # Chama show_salary_input após 2 segundos
+            return
         
         self.layout.clear_widgets()
         
-        grid = GridLayout(cols=2)
+        grid = GridLayout(cols=2, padding=(100, 50), spacing=10)
         background = Image(source='FinGest_t.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
@@ -163,7 +160,9 @@ class FinGest(App):
         
         for category, percentage in zip(categories, self.default_percentages):
             category_label = Label(text=f'{category}')
-            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
+            value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), 
+                                bold = True, font_size = 40, 
+                                color = (159/255.0,226/255.0,191/255.0,1))
             
             grid.add_widget(category_label)
             grid.add_widget(value_label)
