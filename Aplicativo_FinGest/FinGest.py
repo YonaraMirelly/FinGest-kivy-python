@@ -412,18 +412,18 @@ class FinGest(App):
 
         if score <= 4:
             risk_level = "Conservador"
-            advice = "Você tem um perfil de investidor conservador. É recomendável investir em produtos de baixo risco, como títulos do governo e poupança."
         elif score <= 7:
             risk_level = "Moderado"
-            advice = "Você tem um perfil de investidor moderado. Pode considerar uma combinação de investimentos de baixo e médio risco, como títulos corporativos e fundos de investimento."
         else:
             risk_level = "Arrojado"
-            advice = "Você tem um perfil de investidor arrojado. Pode buscar maiores retornos investindo em produtos de alto risco, como ações e fundos imobiliários."
+            
 
         self.show_investment_advice(risk_level)
 
     def show_investment_advice(self, risk_level):
         self.layout.clear_widgets()
+        grid = GridLayout(cols=1, padding=(470, 400), spacing=20)
+
 
         if risk_level == "Conservador":
             background = Image(source='FinGest_conservador.png', 
@@ -442,8 +442,20 @@ class FinGest(App):
                            allow_stretch=True, 
                            keep_ratio=True)
             self.layout.add_widget(background)
-        else:
-            advice = "Perfil de investidor desconhecido."
+            investment_links = [
+                "https://www.fundsexplorer.com.br/funds/alzr11",
+                "https://www.fundsexplorer.com.br/funds/hgcr11",
+                "https://www.fundsexplorer.com.br/funds/cpts11"
+            ]
+            for link in investment_links:
+                investment_button = Button(text=f'{link}', font_size=30, size_hint=(None, None), 
+                                           color = (174/255.0,214/255.0,241/255.0,1),
+                                           size=(250, 150),
+                                           background_color=(118/255.0, 215/255.0, 296/255.0,1))
+                investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
+                grid.add_widget(investment_button)
+
+        self.layout.add_widget(grid) 
 
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -454,9 +466,9 @@ class FinGest(App):
                              on_press=lambda instance: self.escolha(None))
         self.layout.add_widget(back_button)
 
-#função pra sair do app
-    #def exit_app(self, instance):
-        #App.get_running_app().stop()
+
+    def open_investment_link(self, url):
+        webbrowser.open(url)
 
 if __name__ == '__main__':
     FinGest().run()
