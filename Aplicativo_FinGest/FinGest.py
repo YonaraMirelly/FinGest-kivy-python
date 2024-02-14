@@ -186,6 +186,7 @@ class FinGest(App):
         self.layout.add_widget(customize_button)
         self.layout.add_widget(grid)
 
+#função para abrir o popup de customização das porcentagens
     def open_customize_popup(self, instance):
     # Aqui você pode criar a popup para permitir que o usuário personalize as porcentagens
         popup_content = BoxLayout(orientation='horizontal')
@@ -211,7 +212,7 @@ class FinGest(App):
               size_hint=(None, None), size=(800, 500))
         popup.bind(on_dismiss=self.update_values)
         popup.open()
-
+#função para atualizar a tabela de acordo com o que o usuário alterar
     def update_values(self, instance):
         # Atualize os valores das porcentagens com os valores digitados pelo usuário
         new_percentages = [float(input.text) for input in self.percentage_inputs]
@@ -340,7 +341,7 @@ class FinGest(App):
     def open_charity_link(self, url):
         webbrowser.open(url)
 
-#função da tela "investimentos"
+#função da tela "investimentos" - teste de perfil_investidor
     def start_investment_profile_test(self, instance):
         if not self.test_completed: # Verifique se o teste já foi realizado
             self.layout.clear_widgets()
@@ -370,7 +371,7 @@ class FinGest(App):
         # Se o teste já foi concluído, vá diretamente para a tela de resultado
             self.show_investment_advice(self.get_saved_risk_level())
         
-
+    #função para aparição de cada pergunta
     def show_question(self, question_index):
         self.layout.clear_widgets()  # Limpa os widgets anteriores
     
@@ -380,7 +381,7 @@ class FinGest(App):
                             font_size = 50,
                             color = (174/255.0,214/255.0,241/255.0,1), 
                            italic = True, bold = True, 
-                           outline_width =  10)  # Defina a altura do rótulo da pergunta
+                           outline_width =  10)  # Definir a altura do rótulo da pergunta
         grid.add_widget(question_label)
 
         options = self.questions[question_index][1]
@@ -396,7 +397,8 @@ class FinGest(App):
             grid.add_widget(option_button)  # Adiciona o botão de opção ao GridLayout
         
         self.layout.add_widget(grid) 
-
+    
+    #função para apresentar perguntas e coletar respostas
     def process_answer(self, answer, question_index):
         self.answers.append(answer)
 
@@ -407,7 +409,7 @@ class FinGest(App):
             self.layout.clear_widgets()
             self.process_answers()
 
-
+    #função para calcular o resultado
     def process_answers(self):
         score = 0
         for answer in self.answers:
@@ -431,6 +433,7 @@ class FinGest(App):
         # Exiba o resultado
         self.show_investment_advice(risk_level)
 
+    #função para exibir a tela final de acordo com o resultado do teste
     def show_investment_advice(self, risk_level):
         self.layout.clear_widgets()
         grid = GridLayout(cols=1, padding=(490, 420), spacing=20)
@@ -529,13 +532,13 @@ class FinGest(App):
                          pos_hint={"center_x": 0.92},
                          on_press=lambda instance: self.reset_test())
             self.layout.add_widget(redo_button)
-
-    def get_saved_risk_level(self):
-        # Aqui você implementaria a lógica para recuperar o nível de risco salvo (por exemplo, de um arquivo ou banco de dados)
-        return self.saved_risk_level
     
+    #lógica para RECUPERAR o nível de risco salvo
+    def get_saved_risk_level(self):
+        return self.saved_risk_level
+  
+    #lógica para SALVAR o nível de risco 
     def save_risk_level(self, risk_level):
-        # Aqui você implementaria a lógica para salvar o nível de risco (por exemplo, em um arquivo ou banco de dados)
         self.saved_risk_level = risk_level
     
     #função para refazer o teste_investidor
@@ -543,7 +546,8 @@ class FinGest(App):
         self.test_completed = False
         self.saved_risk_level = None
         self.start_investment_profile_test(None)
-
+    
+    #função para abrir os links de investimentos
     def open_investment_link(self, url):
         webbrowser.open(url)
 
