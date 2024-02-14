@@ -212,6 +212,7 @@ class FinGest(App):
               size_hint=(None, None), size=(800, 500))
         popup.bind(on_dismiss=self.update_values)
         popup.open()
+
 #função para atualizar a tabela de acordo com o que o usuário alterar
     def update_values(self, instance):
         # Atualize os valores das porcentagens com os valores digitados pelo usuário
