@@ -71,7 +71,7 @@ class FinGest(App):
         self.submit_button = Button(text='Enviar', font_size = 50, size_hint = (0.2, 0.2),
                                     pos_hint={"center_x": 0.5, "y": 0.200},
                                     color = (159/255.0,226/255.0,191/255.0),
-                                    background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                                    background_color=(84/255.0, 255/255.0, 4/255.0, 1),
                                     on_press=self.escolha)
         self.submit_button.parent = None 
 
@@ -139,7 +139,7 @@ class FinGest(App):
         self.show_welcome_screen()
 
 #função para exibição da tabela em si
-    def calculate_budget(self, new_percentages):
+    def calculate_budget(self, instance):
         self.recado = Label(text = 'Insira APENAS números! (sem vírgula/ponto)', font_size = 40,
                             bold = True, italic = True, color = (236/255.0,5/255.0,5/255.0,1)  )
         
@@ -160,9 +160,9 @@ class FinGest(App):
         
         #essas são as categorias
         categories = ['','','','','','']
-        percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+        #percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
         
-        for category, percentage in zip(categories, percentages):
+        for category, percentage in zip(categories, self.default_percentages):
             category_label = Label(text=f'{category}')
             value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), bold = True, font_size = 40, color = (159/255.0,226/255.0,191/255.0,1))
             
@@ -177,7 +177,7 @@ class FinGest(App):
                              on_press=lambda instance: self.escolha(None))
         
         customize_button = Button(text='Personalizar', font_size = 25, 
-                                  background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                                  background_color=(84/255.0, 255/255.0, 4/255.0, 1),
                                   color = (159/255.0,226/255.0,191/255.0),
                                   size_hint=(None, None), size=(150, 50),
                                   pos=(Window.width - 151, 0.6),
@@ -218,7 +218,7 @@ class FinGest(App):
         # Atualize os valores das porcentagens com os valores digitados pelo usuário
         new_percentages = [float(input.text) for input in self.percentage_inputs]
         self.default_percentages = new_percentages
-        self.calculate_budget(new_percentages)
+        self.calculate_budget(instance)
 
 #função para criar o arquivo json
     def load_expenses(self):
@@ -290,37 +290,40 @@ class FinGest(App):
                            keep_ratio=True)
         self.layout.add_widget(background)
 
-        grid = GridLayout(cols=2)
+        box_layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
         
         charity_links = [
+            "https://doeamor.hospitaldeamor.com.br/stn/?utm_source=google_gsn_doacao_st&gad_source=1&gclid=Cj0KCQiAw6yuBhDrARIsACf94RVktDjDT1hVBCPQ1vVOLSOa2eLCT4a_9JEDBi1V5mdGaJZnoDsEF5YaAkemEALw_wcB",
             "https://www.novosertao.org.br",
-            "https://www.aldeiasinfantis.org.br",
             "https://aacd.org.br",
-            "https://habitatbrasil.org.br/quem-somos/nossa-historia",
-            "https://doe.msf.org.br"
-        ]
+            "https://help.unicef.org/pmax?gad_source=1&language=pt-br",
+            "https://doe.msf.org.br",
+            "https://www.fundacaoaio.org.br/projeto-samuel",
+            "https://www.care.org/pt/",
+            "https://colabore.cicv.org.br/israel-territorios-ocupados/?utm_source=google&utm_medium=search&utm_campaign=emergency-ilot-2023&gclid=Cj0KCQiAw6yuBhDrARIsACf94RX6D8rmgohy9KKvWV3CgGGtFlzVb-RoFVi2St0RYJHygCgrpj_lkMkaAjRnEALw_wcB",
+            "https://www.petlove.com.br/doacoes"]
+        
+        charity_names = [
+        "Hospital do Câncer",
+        "Novo Sertão",
+        "AACD",
+        "UNICEF",
+        "Médicos Sem Fronteiras",
+        "Projeto Samuel",
+        "CARE",
+        "CICV",
+        "PETLOVE"]
 
-        # Adicionando os botões à esquerda da tela
-        # Adicionando os botões à esquerda da tela
-        for i, link in enumerate(charity_links[:5]):
-            charity_button = Button(text=f'{link}', 
-                                background_color=(7/255.0, 26/255.0, 215/255.0, 1),
-                                font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
-                                size_hint=(None, None), size=(200, 50),
-                                pos=(self.layout.width * 0.2, self.layout.height * (0.7 - i * 0.1)))
-            charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
-            grid.add_widget(charity_button)
 
-    
-        # Adicionando os botões à direita da tela
-        for i, link in enumerate(charity_links[5:]):
-            charity_button = Button(text=f'{link}', 
-                                background_color=(7/255.0, 26/255.0, 215/255.0, 1),
-                                font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
-                                size_hint=(None, None), size=(200, 50),
-                                pos=(self.layout.width * 0.7, self.layout.height * (0.7 - i * 0.1)))
+        for name, link in zip(charity_names, charity_links):
+            charity_button = Button(text=name, 
+                            background_color=(7/255.0, 26/255.0, 215/255.0, 1),
+                            font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
+                            size_hint=(None, None), size=(400, 60),
+                            pos_hint={"center_x": 0.5}, 
+                            valign='middle')  # Centraliza o texto verticalmente
             charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
-            grid.add_widget(charity_button)
+            box_layout.add_widget(charity_button)
 
         # botão volta para a tela com a tabela
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
@@ -331,8 +334,9 @@ class FinGest(App):
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.escolha(None))
 
-        self.layout.add_widget(grid)
+        #self.layout.add_widget(grid)
         self.layout.add_widget(back_button)
+        self.layout.add_widget(box_layout)
 
 #função para abrir os links de caridade
     def open_charity_link(self, url):
