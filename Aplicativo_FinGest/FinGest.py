@@ -28,6 +28,7 @@ class FinGest(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+
       
   
 #função para tela inicial de boas-vindas  
@@ -89,33 +90,27 @@ class FinGest(App):
         
         tabela_button = Button(text='TABELA', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.82},
+                              pos_hint={"center_x": 0.4, "center_y": 0.8},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.calculate_budget)
         
         Despesas_mes_button = Button(text='DESPESAS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.67},
+                              pos_hint={"center_x": 0.4, "center_y": 0.61},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.despesas(None))
         
         caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.52},
+                              pos_hint={"center_x": 0.4, "center_y": 0.42},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.show_category_caridade(None))
         
         investimento_button = Button(text='INVESTIMENTOS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.37},
+                              pos_hint={"center_x": 0.4, "center_y": 0.24},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press= lambda instance: self.show_category('Investimentos', None))
-        
-        #quiz_button = Button(text='QUIZ', size_hint=(0.3, 0.1),
-         #                     font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-          #                    pos_hint={"center_x": 0.4, "center_y": 0.22},
-           #                   background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-            #                  on_press=self.next_question())
+                              on_press=self.start_investment_profile_test)
         
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
@@ -343,11 +338,11 @@ class FinGest(App):
         webbrowser.open(url)
 
 #função da tela "investimentos"
-    def show_category(self, category, amount):
+    def start_investment_profile_test(self, instance):
         self.layout.clear_widgets()
 
         grid = GridLayout(cols=1)
-        #botão volta para a tabela
+        
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
                              color = (159/255.0,226/255.0,191/255.0),
@@ -357,118 +352,107 @@ class FinGest(App):
                              on_press=lambda instance: self.escolha(None))
         
         grid.add_widget(back_button)
-
-        if category == 'Investimentos':
-            risk_label = Label(text='Qual o nível de risco que você está disposto a correr?', 
-                               font_size = 40,
-                               color = (12/255.0,212/255.0,170/255.0,1),
-                               italic = True, bold = True)
-            grid.add_widget(risk_label)
-            #questionário para conhecer o perfil do investidor
-            risk_buttons = [
-                ("Alto", lambda: self.show_investment_links("Alto")),
-                ("Médio", lambda: self.show_investment_links("Médio")),
-                ("Baixo", lambda: self.show_savings_advice())
-            ]
-
-            for risk, callback in risk_buttons:
-                risk_button = Button(text=risk,background_color=(7/255.0, 26/255.0, 215/255.0,1), font_size = 40, color = (159/255.0,226/255.0,191/255.0,1),
-                                      pos_hint = {"center_x": 0.5, "y": 0.5}, size = (700,300) )
-                risk_button.bind(on_press=lambda instance, cb=callback: cb())
-                grid.add_widget(risk_button)
-
-        self.layout.add_widget(grid)
-
-#função de acordo com a escolha do investidor (botão)
-    def show_investment_links(self, risk_level):
-        self.layout.clear_widgets()
-
-        grid = GridLayout(cols=1)
-
-        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                             font_size = 30,
-                             color = (159/255.0,226/255.0,191/255.0),
-                             size_hint = (None, None),
-                             size = (100,50),
-                             pos_hint={"x":0, "y":0},
-                             on_press=lambda instance: self.show_category('Investimentos', 0))
-        
-        if risk_level == "Alto":
-            grid.add_widget(Label(text=f'AÇÕES', font_size = 50, color = (12/255.0,212/255.0,170/255.0,1), italic = True, bold = True, outline_width =  10))
-            grid.add_widget(Label(text=f'ALZR11 / HGCR11 / CPTS11 ', font_size = 30, color = (12/255.0,212/255.0,170/255.0,1), italic = True, bold = True, outline_width =  10))
-        elif risk_level == "Médio":
-            grid.add_widget(Label(text=f'TÍTULOS DO GOVERNO', font_size = 50, color = (12/255.0,212/255.0,170/255.0,1), italic = True, bold = True, outline_width =  10))
-            
-        # para mostrar links de acordo com o nível de risco
-        if risk_level == "Alto":
-            #links para investimentos de alto risco (ações)
-            investment_links = [
-                "https://www.fundsexplorer.com.br/funds/alzr11",
-                "https://www.fundsexplorer.com.br/funds/hgcr11",
-                "https://www.fundsexplorer.com.br/funds/cpts11"
-            ]
-            for link in investment_links:
-                investment_button = Button(text=f'{link}', color = (159/255.0,226/255.0,191/255.0,1),background_color=(7/255.0, 26/255.0, 215/255.0,1))
-                investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
-                
-                grid.add_widget(investment_button)
-
-        #a mesma lógica
-        if risk_level == "Médio":
-            #links para investimentos de médio risco (títulos do governo)
-            investment_links = [
-                "https://www.gov.br/investidor/pt-br/investir/tipos-de-investimentos/titulos-publicos",
-                "https://www.tesourodireto.com.br/",
-                "https://www.bb.com.br/site/investimentos/tesouro-direto/"
-            ]
-            for link in investment_links:
-                investment_button = Button(text=f'{link}', color = (159/255.0,226/255.0,191/255.0,1), background_color=(7/255.0, 26/255.0, 215/255.0,1))
-                investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
-                grid.add_widget(investment_button)
         
 
-        grid.add_widget(back_button)
-        self.layout.add_widget(grid)
+        self.questions = [
+            ("Qual é o seu horizonte de investimento?", ["Curto prazo", "Médio prazo", "Longo prazo"]),
+            ("Qual é a sua tolerância ao risco?", ["Baixa", "Média", "Alta"]),
+            ("Qual é o seu objetivo financeiro principal?", ["Preservação de capital", "Crescimento moderado", "Crescimento máximo"]),
+        ]
+        self.answers = []
+        self.show_question(0)
+        #botão volta para a tabela
+        
 
-#função para pequeno risco - é mais um conselho
-    def show_savings_advice(self):
-        self.layout.clear_widgets()
-
-        grid = GridLayout(cols=1)
-
-        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                             font_size = 30,
-                             color = (159/255.0,226/255.0,191/255.0),
-                             size_hint = (None, None),
-                             size = (100,50),
-                             pos_hint={"x":0, "y":0},
-                             on_press=lambda instance: self.show_category('Investimentos', 0))
-        grid.add_widget(Label(text='Deposite seu dinheiro na Poupança!', 
-                              font_size = 50, 
-                              color = (12/255.0,212/255.0,170/255.0,1), 
-                              italic = True, bold = True, outline_width =  10))
-        grid.add_widget(Label(text='Simulador da Poupança', 
-                              font_size = 40, 
-                              color = (12/255.0,212/255.0,170/255.0,1)))
-        grid.add_widget(Label(text='A poupança oferece segurança e liquidez imediata,\nideal para preservar seu capital e atender a metas de curto prazo.', 
-                              font_size = 23, 
-                              color = (12/255.0,212/255.0,170/255.0,1)))
-        grid.add_widget(Label(text='Considere diversificar no futuro, enquanto acompanhamos juntos o crescimento do seu patrimônio.', 
-                              font_size = 25, 
-                              color = (12/255.0,212/255.0,170/255.0,1)))
-        grid.add_widget(Label(text='Continue economizando com inteligência para alcançar seus objetivos financeiros!', 
-                              font_size = 25, 
-                              color = (12/255.0,212/255.0,170/255.0,1)))
-        grid.add_widget(back_button)
+    def show_question(self, question_index):
+        self.layout.clear_widgets()  # Limpa os widgets anteriores
     
-        self.layout.add_widget(grid)
+        grid = GridLayout(cols=1, padding=(330, 50), spacing=20)
 
-#para abrir os links dos investimentos
-    def open_investment_link(self, url):
-        webbrowser.open(url)
+        question_label = Label(text=self.questions[question_index][0],
+                            font_size = 50,
+                            color = (174/255.0,214/255.0,241/255.0,1), 
+                           italic = True, bold = True, 
+                           outline_width =  10)  # Defina a altura do rótulo da pergunta
+        grid.add_widget(question_label)
 
+        options = self.questions[question_index][1]
+        for option in options:
+            option_button = Button(text=option, 
+                               font_size=50, 
+                               color=(174/255.0,214/255.0,241/255.0,1),
+                               size_hint=(None, None),
+                               size=(550, 200),
+                               background_color=(118/255.0, 215/255.0, 296/255.0,1),
+                               pos_hint={"center_x": 0.5, "center_y": 0.5})
+            option_button.bind(on_press=lambda instance, option=option: self.process_answer(option, question_index))
+            grid.add_widget(option_button)  # Adiciona o botão de opção ao GridLayout
+        
+        self.layout.add_widget(grid) 
 
+    def process_answer(self, answer, question_index):
+        self.answers.append(answer)
 
+        if question_index < len(self.questions) - 1:
+            self.layout.clear_widgets()
+            self.show_question(question_index + 1)
+        else:
+            self.layout.clear_widgets()
+            self.process_answers()
+
+    def process_answers(self):
+        score = 0
+        for answer in self.answers:
+            if answer in ["Curto prazo", "Baixa", "Preservação de capital"]:
+                score += 1
+            elif answer in ["Médio prazo", "Média", "Crescimento moderado"]:
+                score += 2
+            elif answer in ["Longo prazo", "Alta", "Crescimento máximo"]:
+                score += 3
+
+        if score <= 4:
+            risk_level = "Conservador"
+            advice = "Você tem um perfil de investidor conservador. É recomendável investir em produtos de baixo risco, como títulos do governo e poupança."
+        elif score <= 7:
+            risk_level = "Moderado"
+            advice = "Você tem um perfil de investidor moderado. Pode considerar uma combinação de investimentos de baixo e médio risco, como títulos corporativos e fundos de investimento."
+        else:
+            risk_level = "Arrojado"
+            advice = "Você tem um perfil de investidor arrojado. Pode buscar maiores retornos investindo em produtos de alto risco, como ações e fundos imobiliários."
+
+        self.show_investment_advice(risk_level)
+
+    def show_investment_advice(self, risk_level):
+        self.layout.clear_widgets()
+
+        if risk_level == "Conservador":
+            background = Image(source='FinGest_conservador.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+            self.layout.add_widget(background)
+
+        elif risk_level == "Moderado":
+            background = Image(source='FinGest_moderado.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+            self.layout.add_widget(background)
+
+        elif risk_level == "Arrojado":
+            background = Image(source='FinGest_arrojado.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+            self.layout.add_widget(background)
+        else:
+            advice = "Perfil de investidor desconhecido."
+
+        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                             font_size = 30,
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (None, None),
+                             size = (100,50),
+                             pos_hint={"x":0, "y":0},
+                             on_press=lambda instance: self.escolha(None))
+        self.layout.add_widget(back_button)
 
 #função pra sair do app
     #def exit_app(self, instance):
