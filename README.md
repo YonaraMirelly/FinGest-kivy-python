@@ -7,7 +7,7 @@
 ° Gerenciamento de Despesas
 ° Área dedicada à caridade para impato social
 ° Teste de Perfil de Investidor
-° Interface Agradável e Intuitiva °
+° °Interface Agradável e Intuitiva °
 ##
 # pip install kivy
 
