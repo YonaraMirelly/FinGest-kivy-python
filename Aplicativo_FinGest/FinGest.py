@@ -16,15 +16,13 @@ import json
 import webbrowser 
 from kivy.clock import Clock
 
-
-
-# classe principal do app
+# classe principal do meu app
 class FinGest(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
         self.layout = FloatLayout()
-        self.load_expenses() #carrega as despesas salvas
-        self.show_welcome_screen()
+        self.load_expenses() #isso aqui carrega as despesas salvas
+        self.introdução()
         return self.layout
 
     def __init__(self, **kwargs):
@@ -34,7 +32,7 @@ class FinGest(App):
     
   
 #função para tela inicial de boas-vindas  
-    def show_welcome_screen(self):
+    def introdução(self):
         background = Image(source='FinGest_introduçao.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
@@ -45,20 +43,20 @@ class FinGest(App):
                               font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.5, "center_y": 0.2},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press=self.show_salary_input)
+                              on_press=self.salario)
         #esse botão sai do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
                              pos_hint={"center_x": 0.5, "center_y": 0.1},
                              background_color=(120/255.0, 5/255.0, 89/255.0, 1),
                              on_press=App.get_running_app().stop)
-    
+        #essa parte serve para adicionar os widgets à interface gráfica
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)   
 
 #tela pra o usuário adicionar o seu salário para análise
-    def show_salary_input(self, instance):
+    def salario(self, instance):
         self.layout.clear_widgets()
         
         background = Image(source='FinGest_input.png', 
@@ -94,7 +92,7 @@ class FinGest(App):
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.4, "center_y": 0.8},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press=self.calculate_budget)
+                              on_press=self.tabela)
         
         Despesas_mes_button = Button(text='DESPESAS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
@@ -106,7 +104,7 @@ class FinGest(App):
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.4, "center_y": 0.42},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press= lambda instance: self.show_category_caridade(None))
+                              on_press= lambda instance: self.caridade(None))
         
         investimento_button = Button(text='INVESTIMENTOS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
@@ -120,23 +118,22 @@ class FinGest(App):
                              size_hint = (None, None),
                              size = (100,50),
                              pos_hint={"x":0, "y":0},
-                             on_press=lambda instance: self.go_back())
+                             on_press=lambda instance: self.voltar())
         
         self.layout.add_widget(background)
         self.layout.add_widget(tabela_button)
         self.layout.add_widget(Despesas_mes_button)
         self.layout.add_widget(caridade_button)
         self.layout.add_widget(investimento_button)
-        #self.layout.add_widget(quiz_button)
         self.layout.add_widget(back_button)
                
 #função para voltar à tela inicial
-    def go_back(self):
+    def voltar(self):
         self.layout.clear_widgets()
-        self.show_welcome_screen()
+        self.introdução()
 
 #função para exibição da tabela em si
-    def calculate_budget(self, instance):
+    def tabela(self, instance):
         salary_text = self.salary_input.text
 
         try:
@@ -145,7 +142,7 @@ class FinGest(App):
             self.layout.clear_widgets()  # Limpa os widgets anteriores
             self.layout.add_widget(Label(text='Insira APENAS números! (sem vírgula/ponto)', 
                                           font_size=40, color=(236/255.0, 5/255.0, 5/255.0, 1)))
-            Clock.schedule_once(self.show_salary_input, 2)  # Chama show_salary_input após 2 segundos
+            Clock.schedule_once(self.salario, 2)  # Chama a tela salario após 2 segundos
             return
         
         self.layout.clear_widgets()
@@ -220,7 +217,7 @@ class FinGest(App):
         # Atualize os valores das porcentagens com os valores digitados pelo usuário
         new_percentages = [float(input.text) for input in self.percentage_inputs]
         self.default_percentages = new_percentages
-        self.calculate_budget(instance)
+        self.tabela(instance)
 
 #função para criar o arquivo json
     def load_expenses(self):
@@ -230,7 +227,7 @@ class FinGest(App):
         else:
             self.expense_values = [""] * 20
 
-#função para abrir o arquivo json
+#função para abrir e "escrever" o arquivo json
     def save_expenses(self):
         with open("expenses.json", "w") as f:
             json.dump(self.expense_values, f)
@@ -283,8 +280,8 @@ class FinGest(App):
             self.expense_values[index] = value
             self.save_expenses()
         
-#interface do botão "caridade"
-    def show_category_caridade(self, instance):
+#interface do botão "cdoação"
+    def caridade(self, instance):
         self.layout.clear_widgets()
 
         background = Image(source='FinGest_caridade.png', 
@@ -344,7 +341,7 @@ class FinGest(App):
     def open_charity_link(self, url):
         webbrowser.open(url)
 
-#função da tela "investimentos" - teste de perfil_investidor
+    #função da tela "investimentos" - teste de perfil_investidor
     def start_investment_profile_test(self, instance):
         if not self.test_completed: # Verifique se o teste já foi realizado
             self.layout.clear_widgets()
