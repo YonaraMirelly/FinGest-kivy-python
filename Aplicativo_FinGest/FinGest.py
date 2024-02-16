@@ -16,6 +16,8 @@ import json
 import webbrowser 
 from kivy.clock import Clock
 
+
+
 # classe principal do app
 class FinGest(App):
     def build(self):
