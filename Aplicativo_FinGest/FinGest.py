@@ -46,11 +46,23 @@ class FinGest(App):
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
                              pos_hint={"center_x": 0.5, "center_y": 0.1},
                              background_color=(120/255.0, 5/255.0, 89/255.0, 1),
-                             on_press=App.get_running_app().stop)
+                             on_press=self.exit_app)
         #essa parte serve para adicionar os widgets à interface gráfica
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)   
+#tela de despedida
+    def exit_app(self, instance):
+        self.layout.clear_widgets()
+        background = Image(source='FinGest_tchau.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        self.layout.add_widget(background)
+        #aguarda 2 segundos antes de fechar o aplicativo
+        Clock.schedule_once(self.close_app, 2.5)   
+    def close_app(self, dt):
+        #fecha o aplicativo
+        App.get_running_app().stop()
 
 #tela pra o usuário adicionar o seu salário para análise
     def salario(self, instance):
@@ -77,10 +89,10 @@ class FinGest(App):
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
 
-         # Adiciona um evento para verificar o input
+         #adiciona um evento para verificar o input
         self.salary_input.bind(text=self.check_input)
         self.salary_input.bind(on_text_validate=self.limpar_mensagem)
-
+#####verificação do input e limpeza da mensagem
     def check_input(self, instance, value):
 
         # Verifica se o input contém apenas números
