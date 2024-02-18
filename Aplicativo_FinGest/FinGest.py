@@ -77,6 +77,29 @@ class FinGest(App):
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
 
+         # Adiciona um evento para verificar o input
+        self.salary_input.bind(text=self.check_input)
+        self.salary_input.bind(on_text_validate=self.clear_error_message)
+
+    def check_input(self, instance, value):
+        # Verifica se o input contém apenas números
+        if not value.isdigit():
+            self.clear_error_message(None)
+            error_label = Label(text='Insira APENAS números, sem vírgulas ou pontos...', 
+                                font_size=30, color=(236/255.0, 5/255.0, 5/255.0, 1), 
+                                size_hint=(None, None), size=(300, 20), bold = True,
+                                pos_hint={"center_x": 0.5, "y": 0.43})
+            self.layout.add_widget(error_label)
+            self.submit_button.disabled = True
+        else:
+            self.submit_button.disabled = False
+    
+    def clear_error_message(self, instance):
+        for widget in self.layout.children:
+            if isinstance(widget, Label) and widget.text.startswith('Insira APENAS números, sem vírgulas ou pontos...'):
+                self.layout.remove_widget(widget)
+        
+
 #função para escolher entre - tabela, despesa, doação e investimentos        
     def escolha(self, instance):
         self.layout.clear_widgets()
@@ -144,7 +167,7 @@ class FinGest(App):
         
         self.layout.clear_widgets()
         
-        grid = GridLayout(cols=2, padding=(100, 50), spacing=10)
+        grid = GridLayout(cols=2, padding=(50, 50), spacing=10)
         background = Image(source='FinGest_t.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
@@ -153,9 +176,14 @@ class FinGest(App):
         #essas são as categorias
         categories = ['','','','','','']
         #percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+
+        self.category_labels = []  # Lista para armazenar os labels das categorias
         
         for category, percentage in zip(categories, self.default_percentages):
-            category_label = Label(text=f'{category}')
+            category_label = Label(text=f'{percentage * 100:.0f}%',  # Altera o texto para a porcentagem
+                                   font_size=40, bold = True, pos_hint={"center_x": 0.1},
+                                   color=(159/255.0,226/255.0,191/255.0,1))
+            self.category_labels.append(category_label)  # Adiciona o label à lista
             value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), 
                                 bold = True, font_size = 40, 
                                 color = (159/255.0,226/255.0,191/255.0,1))
@@ -181,6 +209,11 @@ class FinGest(App):
         self.layout.add_widget(back_button)
         self.layout.add_widget(customize_button)
         self.layout.add_widget(grid)
+
+    def update_category_labels(self, new_percentages):
+        # Atualiza os labels das categorias com as novas porcentagens
+        for label, percentage in zip(self.category_labels, new_percentages):
+            label.text = f'{percentage * 100:.0f}%'
 
 #função para abrir o popup de customização das porcentagens
     def open_customize_popup(self, instance):
@@ -209,6 +242,12 @@ class FinGest(App):
         popup.bind(on_dismiss=self.update_values)
         popup.open()
 
+    def update_values(self, instance):
+        # Atualize os valores das porcentagens com os valores digitados pelo usuário
+        new_percentages = [float(input.text) for input in self.percentage_inputs]
+        self.default_percentages = new_percentages
+        self.tabela(instance)
+        
 #função para atualizar a tabela de acordo com o que o usuário alterar
     def update_values(self, instance):
         # Atualize os valores das porcentagens com os valores digitados pelo usuário
