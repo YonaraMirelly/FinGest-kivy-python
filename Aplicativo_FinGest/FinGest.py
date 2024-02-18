@@ -79,12 +79,13 @@ class FinGest(App):
 
          # Adiciona um evento para verificar o input
         self.salary_input.bind(text=self.check_input)
-        self.salary_input.bind(on_text_validate=self.clear_error_message)
+        self.salary_input.bind(on_text_validate=self.limpar_mensagem)
 
     def check_input(self, instance, value):
+
         # Verifica se o input contém apenas números
         if not value.isdigit():
-            self.clear_error_message(None)
+            self.limpar_mensagem(None)
             error_label = Label(text='Insira APENAS números, sem vírgulas ou pontos...', 
                                 font_size=30, color=(236/255.0, 5/255.0, 5/255.0, 1), 
                                 size_hint=(None, None), size=(300, 20), bold = True,
@@ -92,9 +93,10 @@ class FinGest(App):
             self.layout.add_widget(error_label)
             self.submit_button.disabled = True
         else:
+            self.limpar_mensagem(True)
             self.submit_button.disabled = False
-    
-    def clear_error_message(self, instance):
+
+    def limpar_mensagem(self, instance):
         for widget in self.layout.children:
             if isinstance(widget, Label) and widget.text.startswith('Insira APENAS números, sem vírgulas ou pontos...'):
                 self.layout.remove_widget(widget)
@@ -167,8 +169,8 @@ class FinGest(App):
         
         self.layout.clear_widgets()
         
-        grid = GridLayout(cols=2, padding=(50, 50), spacing=10)
-        background = Image(source='FinGest_t.png', 
+        grid = GridLayout(cols=2, padding=(50, 55), spacing=10)
+        background = Image(source='FinGest_tabelag.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
         
