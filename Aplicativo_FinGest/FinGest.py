@@ -39,7 +39,7 @@ class FinGest(App):
         start_button = Button(text='Gerir Agora!', size_hint=(0.3, 0.1),
                               font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
                               pos_hint={"center_x": 0.5, "center_y": 0.2},
-                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                              background_color=(118/255.0, 215/255.0, 196/255.0, 1), elevation=10,
                               on_press=self.salario)
         #esse botão sai do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
@@ -54,7 +54,7 @@ class FinGest(App):
 #tela de despedida
     def exit_app(self, instance):
         self.layout.clear_widgets()
-        background = Image(source='FinGest_tchau.png', 
+        background = Image(source='FinGest_bye.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
         self.layout.add_widget(background)
