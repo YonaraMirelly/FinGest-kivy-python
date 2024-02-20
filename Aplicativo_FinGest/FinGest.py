@@ -379,7 +379,7 @@ class FinGest(App):
 
     #função da tela "investimentos" - teste de perfil_investidor
     def start_investment_profile_test(self, instance):
-        if not self.test_completed: # Verifique se o teste já foi realizado
+        if not self.test_completed: #verifica se o teste já foi realizado
             self.layout.clear_widgets()
 
             grid = GridLayout(cols=1)
@@ -402,14 +402,14 @@ class FinGest(App):
             ]
             self.answers = []
             self.show_question(0)
-        #botão volta para a tabela
+
         else:
-        # Se o teste já foi concluído, vá diretamente para a tela de resultado
+        #Se o teste já foi concluído, vá diretamente para a tela de resultado
             self.show_investment_advice(self.get_saved_risk_level())
         
     #função para aparição de cada pergunta
     def show_question(self, question_index):
-        self.layout.clear_widgets()  # Limpa os widgets anteriores
+        self.layout.clear_widgets()  
     
         grid = GridLayout(cols=1, padding=(330, 50), spacing=20)
 
@@ -417,7 +417,7 @@ class FinGest(App):
                             font_size = 50,
                             color = (174/255.0,214/255.0,241/255.0,1), 
                            italic = True, bold = True, 
-                           outline_width =  10)  # Definir a altura do rótulo da pergunta
+                           outline_width =  10)  
         grid.add_widget(question_label)
 
         options = self.questions[question_index][1]
@@ -430,7 +430,7 @@ class FinGest(App):
                                background_color=(118/255.0, 215/255.0, 296/255.0,1),
                                pos_hint={"center_x": 0.5, "center_y": 0.5})
             option_button.bind(on_press=lambda instance, option=option: self.process_answer(option, question_index))
-            grid.add_widget(option_button)  # Adiciona o botão de opção ao GridLayout
+            grid.add_widget(option_button)  #botões das perguntas
         
         self.layout.add_widget(grid) 
     
@@ -464,9 +464,9 @@ class FinGest(App):
             risk_level = "Arrojado"
         
         self.save_risk_level(risk_level)
-        # Marque o teste como concluído
+        #marca o teste como concluído
         self.test_completed = True
-        # Exiba o resultado
+        #exibir o resultado
         self.show_investment_advice(risk_level)
 
     #função para exibir a tela final de acordo com o resultado do teste
@@ -569,13 +569,14 @@ class FinGest(App):
                          on_press=lambda instance: self.reset_test())
             self.layout.add_widget(redo_button)
     
-    #lógica para RECUPERAR o nível de risco salvo
-    def get_saved_risk_level(self):
-        return self.saved_risk_level
   
     #lógica para SALVAR o nível de risco 
     def save_risk_level(self, risk_level):
         self.saved_risk_level = risk_level
+
+ #lógica para RECUPERAR o nível de risco salvo
+    def get_saved_risk_level(self):
+        return self.saved_risk_level
     
     #função para refazer o teste_investidor
     def reset_test(self):
