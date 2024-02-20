@@ -224,7 +224,7 @@ class FinGest(App):
 
 #função para abrir o popup de customização das porcentagens
     def open_customize_popup(self, instance):
-    # Aqui você pode criar a popup para permitir que o usuário personalize as porcentagens
+    #popup em si
         popup_content = BoxLayout(orientation='horizontal')
 
         grid_left = GridLayout(cols=1, size_hint=(0.5, 1))
@@ -251,7 +251,7 @@ class FinGest(App):
         
 #função para atualizar a tabela de acordo com o que o usuário alterar
     def update_values(self, instance):
-        # Atualize os valores das porcentagens com os valores digitados pelo usuário
+        # atualizar os valores das porcentagens de acordo com o que o usuário digitar
         new_percentages = [float(input.text) for input in self.percentage_inputs]
         self.default_percentages = new_percentages
         self.tabela(instance)
@@ -264,7 +264,7 @@ class FinGest(App):
         else:
             self.expense_values = [""] * 20
 
-#função para abrir e "escrever" o arquivo json
+#função para abrir e "escrever" no arquivo json
     def save_expenses(self):
         with open("expenses.json", "w") as f:
             json.dump(self.expense_values, f)
@@ -293,8 +293,8 @@ class FinGest(App):
                                       pos_hint={"center_x": 0.30, "center_y": 0.8 - i * 0.08},
                                       background_color=(176/255.0, 252/255.0, 175/255.0, 1),
                                       size_hint=(None, None), size=(350, 50),
-                                      text=self.expense_values[i])  # Carrega o valor salvo
-            expense_input.bind(text=lambda instance, value, index=i: self.update_expense_value(index, value))  # Atualiza o valor na lista quando houver mudança
+                                      text=self.expense_values[i])  #valor salvo
+            expense_input.bind(text=lambda instance, value, index=i: self.update_expense_value(index, value))  #atualiza o valor na lista quando houver mudança
             self.expense_inputs.append(expense_input)
             self.layout.add_widget(expense_input)
 
@@ -303,8 +303,8 @@ class FinGest(App):
                                       pos_hint={"center_x": 0.7, "center_y": 0.8 - i * 0.08},
                                       background_color=(176/255.0, 252/255.0, 175/255.0, 1),
                                       size_hint=(None, None), size=(350, 50),
-                                      text=self.expense_values[i + 10])  # Carrega o valor salvo
-            expense_input.bind(text=lambda instance, value, index=i+10: self.update_expense_value(index, value))  # Atualiza o valor na lista quando houver mudança
+                                      text=self.expense_values[i + 10])  #valor
+            expense_input.bind(text=lambda instance, value, index=i+10: self.update_expense_value(index, value))  #atualiza o valor na lista quando houver mudança
             self.expense_inputs.append(expense_input)
             self.layout.add_widget(expense_input)
 
@@ -356,11 +356,11 @@ class FinGest(App):
                             font_size=30, color=(159/255.0, 226/255.0, 191/255.0, 1),
                             size_hint=(None, None), size=(400, 60),
                             pos_hint={"center_x": 0.5}, 
-                            valign='middle')  # Centraliza o texto verticalmente
+                            valign='middle')  #texto na vertical
             charity_button.bind(on_press=lambda instance, url=link: self.open_charity_link(url))
             box_layout.add_widget(charity_button)
 
-        # botão volta para a tela com a tabela
+        #botão volta para a tela com a tabela
         back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                              font_size = 30,
                              color = (159/255.0,226/255.0,191/255.0),
@@ -369,7 +369,7 @@ class FinGest(App):
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.escolha(None))
 
-        #self.layout.add_widget(grid)
+
         self.layout.add_widget(back_button)
         self.layout.add_widget(box_layout)
 
@@ -404,7 +404,7 @@ class FinGest(App):
             self.show_question(0)
 
         else:
-        #Se o teste já foi concluído, vá diretamente para a tela de resultado
+        #Se o teste já foi concluído, vai diretamente para a tela de resultado
             self.show_investment_advice(self.get_saved_risk_level())
         
     #função para aparição de cada pergunta
