@@ -170,14 +170,7 @@ class FinGest(App):
     def tabela(self, instance):
         salary_text = self.salary_input.text
 
-        try:
-            salary = float(salary_text)
-        except ValueError:
-            self.layout.clear_widgets()  # Limpa os widgets anteriores
-            self.layout.add_widget(Label(text='Insira APENAS números! (sem vírgula/ponto)', 
-                                          font_size=40, color=(236/255.0, 5/255.0, 5/255.0, 1)))
-            Clock.schedule_once(self.salario, 2)  # Chama a tela salario após 2 segundos
-            return
+        salary = int(salary_text)
         
         self.layout.clear_widgets()
         
@@ -189,15 +182,15 @@ class FinGest(App):
         
         #essas são as categorias
         categories = ['','','','','','']
-        #percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+        #porcentagens = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
 
-        self.category_labels = []  # Lista para armazenar os labels das categorias
+        self.category_labels = []  #Lista para armazenar as porcentagens em formato amigável.
         
         for category, percentage in zip(categories, self.default_percentages):
             category_label = Label(text=f'{percentage * 100:.0f}%',  # Altera o texto para a porcentagem
                                    font_size=40, bold = True, pos_hint={"center_x": 0.1},
                                    color=(159/255.0,226/255.0,191/255.0,1))
-            self.category_labels.append(category_label)  # Adiciona o label à lista
+            self.category_labels.append(category_label)  #adiciona o label à lista
             value_label = Label(text=f'R$ {salary * percentage:.2f}'.replace('.',','), 
                                 bold = True, font_size = 40, 
                                 color = (159/255.0,226/255.0,191/255.0,1))
@@ -255,12 +248,6 @@ class FinGest(App):
               size_hint=(None, None), size=(800, 500))
         popup.bind(on_dismiss=self.update_values)
         popup.open()
-
-    def update_values(self, instance):
-        # Atualize os valores das porcentagens com os valores digitados pelo usuário
-        new_percentages = [float(input.text) for input in self.percentage_inputs]
-        self.default_percentages = new_percentages
-        self.tabela(instance)
         
 #função para atualizar a tabela de acordo com o que o usuário alterar
     def update_values(self, instance):
@@ -284,7 +271,6 @@ class FinGest(App):
 
 #função para exibir os inputs em formato de lista
     def despesas(self, instance):
-        # Limpar widgets da tela atual
         self.layout.clear_widgets()
         background = Image(source='FinGest_despesas.png', 
                            allow_stretch=True, 
@@ -299,9 +285,9 @@ class FinGest(App):
                              on_press=lambda instance: self.escolha(None))
         self.layout.add_widget(back_button)
 
-        self.expense_inputs = []  # Lista para armazenar os TextInput de despesas
+        self.expense_inputs = []  #lista para armazenar os textinput de despesas
 
-        # Adiciona os TextInput de despesas ao layout
+        #pra adicionar os TextInputs de despesas ao layout
         for i in range(10):
             expense_input = TextInput(hint_text='R$00,00 - CURTO PRAZO', multiline=False,
                                       pos_hint={"center_x": 0.30, "center_y": 0.8 - i * 0.08},
