@@ -13,7 +13,7 @@ import json
 import webbrowser 
 from kivy.clock import Clock
 
-# classe principal do meu app
+#classe principal do meu app
 class FinGest(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
@@ -24,7 +24,7 @@ class FinGest(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.test_completed = False  # Variável de estado para rastrear se o teste foi concluído
+        self.test_completed = False  #Variável de estado para rastrear se o teste foi concluído
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
     
   
