@@ -53,7 +53,22 @@ class FinGest(App):
         #essa parte serve para adicionar os widgets à interface gráfica
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
-        self.layout.add_widget(exit_button)   
+        self.layout.add_widget(exit_button)  
+        sobre_button = Button(text='SOBRE', font_size = 25, 
+                                  background_color=(84/255.0, 255/255.0, 4/255.0, 1),
+                                  color = (159/255.0,226/255.0,191/255.0),
+                                  size_hint=(None, None), size=(150, 100),
+                                  pos=(Window.width - 151, 0.6),
+                                  on_press=self.sobre_app)
+        self.layout.add_widget(sobre_button)
+    
+    def sobre_app(self, instance):
+        self.layout.clear_widgets()
+        background = Image(source='FinGest_sobre.png', 
+                           allow_stretch=True, 
+                           keep_ratio=True)
+        self.layout.add_widget(background)
+
         
 
 #tela de despedida
@@ -92,6 +107,7 @@ class FinGest(App):
                                     on_press=self.escolha)
         self.submit_button.parent = None 
 
+        
         self.layout.add_widget(background)
         self.layout.add_widget(self.salary_input)
         self.layout.add_widget(self.submit_button)
@@ -99,6 +115,7 @@ class FinGest(App):
          #adiciona um evento para verificar o input
         self.salary_input.bind(text=self.check_input)
         self.salary_input.bind(on_text_validate=self.limpar_mensagem)
+
 #####verificação do input e limpeza da mensagem
     def check_input(self, instance, value):
 
