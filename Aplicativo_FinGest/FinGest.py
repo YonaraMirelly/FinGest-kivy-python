@@ -526,7 +526,6 @@ class FinGest(App):
         self.layout.clear_widgets()
         grid = GridLayout(cols=1, padding=(490, 420), spacing=20)
 
-
         if risk_level == "Conservador":
             background = Image(source='FinGest_conservadors.png', 
                            allow_stretch=True, 
@@ -550,7 +549,6 @@ class FinGest(App):
                                            background_color=(118/255.0, 215/255.0, 296/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 grid.add_widget(investment_button)
-
 
         elif risk_level == "Moderado":
             background = Image(source='FinGest_moderador.png', 
@@ -577,11 +575,7 @@ class FinGest(App):
                                            background_color=(118/255.0, 215/255.0, 296/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 grid.add_widget(investment_button)
-                
-            
 
-            
-        
         elif risk_level == "Arrojado":
             background = Image(source='FinGest_arrojados.png', 
                            allow_stretch=True, 
