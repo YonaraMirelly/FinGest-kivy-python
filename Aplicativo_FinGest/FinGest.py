@@ -583,7 +583,7 @@ class FinGest(App):
             
         
         elif risk_level == "Arrojado":
-            background = Image(source='FinGest_arrojado.png', 
+            background = Image(source='FinGest_arrojados.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
             self.layout.add_widget(background)
