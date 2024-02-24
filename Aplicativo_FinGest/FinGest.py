@@ -14,7 +14,6 @@ import webbrowser
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 
-
 #classe principal do meu app
 class FinGest(App):
     def build(self):
@@ -29,6 +28,7 @@ class FinGest(App):
         super().__init__(**kwargs)
         self.test_completed = False  #Variável de estado para rastrear se o teste foi concluído
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+        self.music_playing = False #pra musica
 
 #função para tela inicial de boas-vindas  
     def introdução(self):
@@ -44,6 +44,7 @@ class FinGest(App):
                       pos_hint={"center_x": 0.5, "center_y": 0.25},
                       background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                       on_press=self.salario)
+        
         #esse botão sair do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
@@ -53,15 +54,37 @@ class FinGest(App):
         #essa parte serve para adicionar os widgets à interface gráfica
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)  
+        
         sobre_button = Button(text='SOBRE', font_size = 25, 
                                   background_color=(84/255.0, 255/255.0, 4/255.0, 1),
                                   color = (159/255.0,226/255.0,191/255.0),
                                   size_hint=(None, None), size=(150, 100),
                                   pos_hint={"center_x": 0.73, "y": 0.01},
-                                  on_press=self.sobre_app)
+                                  on_press=self.sobre_app) 
+        
+        parar_musica_button = Button(size_hint=(None, None), size=(100, 100),
+                           pos_hint={"center_x": 0.3, "center_y": 0.070},
+                           background_normal='som.png',
+                           background_down='som.png',
+                           on_press=self.toggle_music)
+       
         self.layout.add_widget(sobre_button)
         self.layout.add_widget(background)
-       
+        self.layout.add_widget(parar_musica_button)
+#musica
+    def toggle_music(self, instance):
+        if self.sound:
+            if self.music_playing:
+                self.sound.stop()
+                self.music_playing = False
+            else:
+                self.sound.play()
+                self.music_playing = True
+    def stop_music(self, instance):
+        if self.sound:
+            self.sound.stop()
+            self.music_playing = False
+
 #tela explicando como surgiu o app
     def sobre_app(self, instance):
         self.layout.clear_widgets()
@@ -621,7 +644,6 @@ class FinGest(App):
                          on_press=lambda instance: self.reset_test())
             self.layout.add_widget(redo_button)
     
-  
     #lógica para SALVAR o nível de risco 
     def save_risk_level(self, risk_level):
         self.saved_risk_level = risk_level
