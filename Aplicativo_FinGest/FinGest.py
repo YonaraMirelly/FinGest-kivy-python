@@ -61,16 +61,35 @@ class FinGest(App):
                                   pos=(Window.width - 151, 0.6),
                                   on_press=self.sobre_app)
         self.layout.add_widget(sobre_button)
-    
+#tela explicando como surgiu o app
     def sobre_app(self, instance):
         self.layout.clear_widgets()
         background = Image(source='FinGest_sobre.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
-        self.layout.add_widget(background)
-
         
+        self.submit_button = Button(text='', font_size = 50, size_hint = (0.2, 0.2),
+                                    pos_hint={"center_x": 0.25, "y": 0.200}, size=(150, 1000),
+                                    color = (159/255.0,226/255.0,191/255.0),
+                                    background_color=(84/255.0, 255/255.0, 4/255.0, 1),
+                                    on_press=self.abrir_livro)
+        self.submit_button.parent = None 
 
+        back_button = Button(text='Voltar', background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                             font_size = 30,
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (None, None),
+                             size = (100,50),
+                             pos_hint={"x":0, "y":0},
+                             on_press=lambda instance: self.voltar())
+
+        self.layout.add_widget(self.submit_button)
+        self.layout.add_widget(background)
+        self.layout.add_widget(back_button)
+#abrir o livro
+    def abrir_livro(self, instance):
+        url = 'https://aceleracaodigital.com/os-segredos-da-mente-milionaria/'
+        webbrowser.open(url)
 #tela de despedida
     def exit_app(self, instance):
         self.layout.clear_widgets()
