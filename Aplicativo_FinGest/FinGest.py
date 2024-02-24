@@ -10,12 +10,12 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
-from kivy.garden.graph import Graph, MeshLinePlot
+from kivy.uix.filechooser import FileChooserListView
 import os
 import json
 import webbrowser 
 from kivy.clock import Clock
-from networkx import graph_atlas_g
+
 
 #classe principal do meu app
 class FinGest(App):
@@ -28,8 +28,13 @@ class FinGest(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.layout = BoxLayout(orientation='vertical')
         self.test_completed = False  #Variável de estado para rastrear se o teste foi concluído
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+
+        file_chooser = FileChooserListView()
+        file_chooser.bind(on_submit=self.adicionar_imagem)
+        self.layout.add_widget(file_chooser)
     
   
 #função para tela inicial de boas-vindas  
@@ -227,22 +232,6 @@ class FinGest(App):
         for label, percentage in zip(self.category_labels, new_percentages):
             label.text = f'{percentage * 100:.0f}%'
 
-    def open_graph_popup(self, instance):
-    # Cria um widget Graph
-        graph = Graph(xlabel='X', ylabel='Y', x_ticks_minor=5,
-                  x_ticks_major=25, y_ticks_major=1,
-                  y_grid_label=True, x_grid_label=True,
-                  padding=5, x_grid=True, y_grid=True,
-                  xmin=-0, xmax=100, ymin=-1, ymax=1)
-
-    # Adiciona um gráfico de linha ao widget Graph
-    plot = MeshLinePlot(color=[1, 0, 0, 1])
-    plot.points = [(x, sin(x / 10.)) for x in range(0, 101)]
-    graphlib.add_plot(plot)
-
-    # Cria um popup com o gráfico
-    popup = Popup(title='Gráfico', content=graph_atlas_g, size_hint=(None, None), size=(400, 400))
-    popup.open()
 #função para abrir o popup de customização das porcentagens
     def open_customize_popup(self, instance):
     #popup em si
@@ -329,8 +318,32 @@ class FinGest(App):
             self.expense_inputs.append(expense_input)
             self.layout.add_widget(expense_input)
 
+            anexar_button = Button(text='ANEXAR', background_color=(84/255.0, 255/255.0, 4/255.0, 1),
+                             font_size = 30,
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (None, None),
+                             size = (130,60),
+                             pos_hint={"x":0.89, "y":0},
+                             on_press=lambda instance: self.adicionar_imagem(None, None))
+            
+            self.layout.add_widget(anexar_button)
         return self.layout
 
+    def adicionar_imagem(self, instance, value):
+        self.layout.clear_widgets()
+        selecionar_button = Button(text='Adicione um comprovante de despesa', background_color=(84/255.0, 255/255.0, 4/255.0, 1),
+                             font_size = 30,
+                             color = (159/255.0,226/255.0,191/255.0),
+                             size_hint = (None, None),
+                             size = (600,70),
+                             pos_hint={"x":0.27, "y":0},
+                             on_press=lambda instance: self.voltar(None))
+            
+        self.layout.add_widget(selecionar_button)
+
+       
+
+        
 #função pra salvar os inputs
     def update_expense_value(self, index, value):
         if index < len(self.expense_values):
