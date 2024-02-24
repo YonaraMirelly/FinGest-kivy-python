@@ -1,5 +1,3 @@
-from cmath import sin
-import graphlib
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -10,11 +8,11 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
-from kivy.uix.filechooser import FileChooserListView
 import os
 import json
 import webbrowser 
 from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
 
 
 #classe principal do meu app
@@ -22,34 +20,30 @@ class FinGest(App):
     def build(self):
         Window.clearcolor = ( 4/255.0, 10/255.0, 56/255.0, 1)
         self.layout = FloatLayout()
+        self.sound = SoundLoader.load('C:\\Users\\yonara\\Music\\laufey.mp3') #som ambiente
         self.load_expenses() #isso aqui carrega as despesas salvas
         self.introdução()
         return self.layout
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = BoxLayout(orientation='vertical')
         self.test_completed = False  #Variável de estado para rastrear se o teste foi concluído
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
 
-        file_chooser = FileChooserListView()
-        file_chooser.bind(on_submit=self.adicionar_imagem)
-        self.layout.add_widget(file_chooser)
-    
-  
 #função para tela inicial de boas-vindas  
     def introdução(self):
+        if self.sound:
+            self.sound.play()
         background = Image(source='FinGest_introduçao.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
-                           
-        
+                                 
         #esse botão direciona para a 2ª interface
         start_button = Button(text='Gerir Agora!', size_hint=(0.3, 0.1),
-                              font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.5, "center_y": 0.2},
-                              background_color=(118/255.0, 215/255.0, 196/255.0, 1),
-                              on_press=self.salario)
+                      font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
+                      pos_hint={"center_x": 0.5, "center_y": 0.2},
+                      background_color=(118/255.0, 215/255.0, 196/255.0, 1),
+                      on_press=self.salario)
         #esse botão sai do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
@@ -60,6 +54,8 @@ class FinGest(App):
         self.layout.add_widget(background)
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)   
+        
+
 #tela de despedida
     def exit_app(self, instance):
         self.layout.clear_widgets()
@@ -76,6 +72,7 @@ class FinGest(App):
 
 #tela pra o usuário adicionar o seu salário para análise
     def salario(self, instance):
+    
         self.layout.clear_widgets()
         
         background = Image(source='FinGest_input.png', 
@@ -318,32 +315,7 @@ class FinGest(App):
             self.expense_inputs.append(expense_input)
             self.layout.add_widget(expense_input)
 
-            anexar_button = Button(text='ANEXAR', background_color=(84/255.0, 255/255.0, 4/255.0, 1),
-                             font_size = 30,
-                             color = (159/255.0,226/255.0,191/255.0),
-                             size_hint = (None, None),
-                             size = (130,60),
-                             pos_hint={"x":0.89, "y":0},
-                             on_press=lambda instance: self.adicionar_imagem(None, None))
-            
-            self.layout.add_widget(anexar_button)
-        return self.layout
-
-    def adicionar_imagem(self, instance, value):
-        self.layout.clear_widgets()
-        selecionar_button = Button(text='Adicione um comprovante de despesa', background_color=(84/255.0, 255/255.0, 4/255.0, 1),
-                             font_size = 30,
-                             color = (159/255.0,226/255.0,191/255.0),
-                             size_hint = (None, None),
-                             size = (600,70),
-                             pos_hint={"x":0.27, "y":0},
-                             on_press=lambda instance: self.voltar(None))
-            
-        self.layout.add_widget(selecionar_button)
-
-       
-
-        
+      
 #função pra salvar os inputs
     def update_expense_value(self, index, value):
         if index < len(self.expense_values):
@@ -430,9 +402,13 @@ class FinGest(App):
         
 
             self.questions = [
-            ("Qual é o seu horizonte de investimento?", ["Curto prazo", "Médio prazo", "Longo prazo"]),
-            ("Qual é a sua tolerância ao risco?", ["Baixa", "Média", "Alta"]),
-            ("Qual é o seu objetivo financeiro principal?", ["Preservação de capital", "Crescimento moderado", "Crescimento máximo"]),
+            ("1. Qual a sua idade?", ["Acima de 50 anos", "Entre 30 e 50 anos", "Abaixo de 30 anos"]),
+            ("2. Qual a sua maior preocupação ao investir?", ["Segurança do dinheiro", "Retornos consistentes", "Lucro máximo"]),
+            ("3. Qual é o seu objetivo financeiro principal?", ["Preservação de capital", "Crescimento moderado", "Crescimento máximo"]),
+            ("4. Você se considera paciente?", ["Sou MUITO paciente", "Sou paciente", "Não tenho paciência"]),
+            ("5. Qual é a sua tolerância ao risco?", ["Não quero arriscar", "Poucos riscos", "Altos riscos"]),
+            ("6. Qual a sua renda mensal?", ["Até R$5.000", "Entre R$5.000 e 15.000", "Acima de R$ 15.000"]),
+            ("7. Qual a sua tolerância a oscilações no mercado?", ["Evito oscilações", "Algumas oscilações", "Aceito qualquer uma"]),
             ]
             self.answers = []
             self.show_question(0)
@@ -483,16 +459,19 @@ class FinGest(App):
     def process_answers(self):
         score = 0
         for answer in self.answers:
-            if answer in ["Curto prazo", "Baixa", "Preservação de capital"]:
+            if answer in ["Acima de 50 anos", "Segurança do dinheiro", "Preservação de capital", "Sou MUITO paciente", 
+                          "Não quero arriscar", "Até R$5.000", "Evito oscilações"]:
                 score += 1
-            elif answer in ["Médio prazo", "Média", "Crescimento moderado"]:
+            elif answer in ["Entre 30 e 50 anos", "Retornos consistentes", "Crescimento moderado","Sou paciente",
+                            "Poucos riscos", "Entre R$5.000 e 15.000", "Aceito algumas oscilações"]:
                 score += 2
-            elif answer in ["Longo prazo", "Alta", "Crescimento máximo"]:
+            elif answer in ["Abaixo de 30 anos", "Lucro máximo", "Crescimento máximo","Não tenho paciência",
+                            "BAltos riscos", "Acima de R$ 15.000", "Oscilações não é um problema"]:
                 score += 3
 
-        if score <= 4:
+        if score <= 7:
             risk_level = "Conservador"
-        elif score <= 7:
+        elif score <= 14:
             risk_level = "Moderado"
         else:
             risk_level = "Arrojado"
