@@ -34,33 +34,34 @@ class FinGest(App):
     def introdução(self):
         if self.sound:
             self.sound.play()
-        background = Image(source='FinGest_introduçao.png', 
+        background = Image(source='FinGest_intro.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
                                  
         #esse botão direciona para a 2ª interface
         start_button = Button(text='Gerir Agora!', size_hint=(0.3, 0.1),
                       font_size=45, color = (159/255.0,226/255.0,191/255.0,1),
-                      pos_hint={"center_x": 0.5, "center_y": 0.2},
+                      pos_hint={"center_x": 0.5, "center_y": 0.25},
                       background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                       on_press=self.salario)
-        #esse botão sai do app
+        #esse botão sair do app
         exit_button = Button(text='Sair do App', size_hint=(0.3, 0.1),
                              font_size=45, color=(159/255.0, 226/255.0, 191/255.0, 1),
-                             pos_hint={"center_x": 0.5, "center_y": 0.1},
+                             pos_hint={"center_x": 0.5, "center_y": 0.15},
                              background_color=(120/255.0, 5/255.0, 89/255.0, 1),
                              on_press=self.exit_app)
         #essa parte serve para adicionar os widgets à interface gráfica
-        self.layout.add_widget(background)
         self.layout.add_widget(start_button)
         self.layout.add_widget(exit_button)  
         sobre_button = Button(text='SOBRE', font_size = 25, 
                                   background_color=(84/255.0, 255/255.0, 4/255.0, 1),
                                   color = (159/255.0,226/255.0,191/255.0),
                                   size_hint=(None, None), size=(150, 100),
-                                  pos=(Window.width - 151, 0.6),
+                                  pos_hint={"center_x": 0.73, "y": 0.01},
                                   on_press=self.sobre_app)
         self.layout.add_widget(sobre_button)
+        self.layout.add_widget(background)
+       
 #tela explicando como surgiu o app
     def sobre_app(self, instance):
         self.layout.clear_widgets()
@@ -90,6 +91,7 @@ class FinGest(App):
     def abrir_livro(self, instance):
         url = 'https://aceleracaodigital.com/os-segredos-da-mente-milionaria/'
         webbrowser.open(url)
+
 #tela de despedida
     def exit_app(self, instance):
         self.layout.clear_widgets()
@@ -161,7 +163,7 @@ class FinGest(App):
     def escolha(self, instance):
         self.layout.clear_widgets()
 
-        background = Image(source='FinGest_escolha.png', 
+        background = Image(source='FinGest_escolhas.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
         
@@ -179,13 +181,13 @@ class FinGest(App):
         
         caridade_button = Button(text='DOAÇÃO', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.42},
+                              pos_hint={"center_x": 0.4, "center_y": 0.39},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press= lambda instance: self.caridade(None))
         
         investimento_button = Button(text='INVESTIMENTOS', size_hint=(0.3, 0.1),
                               font_size=40, color = (159/255.0,226/255.0,191/255.0,1),
-                              pos_hint={"center_x": 0.4, "center_y": 0.24},
+                              pos_hint={"center_x": 0.4, "center_y": 0.2},
                               background_color=(118/255.0, 215/255.0, 196/255.0, 1),
                               on_press=self.start_investment_profile_test)
         
@@ -197,12 +199,13 @@ class FinGest(App):
                              pos_hint={"x":0, "y":0},
                              on_press=lambda instance: self.voltar())
         
-        self.layout.add_widget(background)
+
         self.layout.add_widget(tabela_button)
         self.layout.add_widget(Despesas_mes_button)
         self.layout.add_widget(caridade_button)
         self.layout.add_widget(investimento_button)
         self.layout.add_widget(back_button)
+        self.layout.add_widget(background)
                
 #função para voltar à tela inicial
     def voltar(self):
@@ -525,7 +528,7 @@ class FinGest(App):
 
 
         if risk_level == "Conservador":
-            background = Image(source='FinGest_conservador.png', 
+            background = Image(source='FinGest_conservadors.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
             self.layout.add_widget(background)
@@ -550,10 +553,12 @@ class FinGest(App):
 
 
         elif risk_level == "Moderado":
-            background = Image(source='FinGest_moderado.png', 
+            background = Image(source='FinGest_moderador.png', 
                            allow_stretch=True, 
                            keep_ratio=True)
+    
             self.layout.add_widget(background)
+            
             investment_links = [
                 "https://www.tesourodireto.com.br/titulos/precos-e-taxas.htm",
                 "https://www.bb.com.br/site/investimentos/tesouro-direto/?gad_source=1&gclid=Cj0KCQiA5rGuBhCnARIsAN11vgR4QMaW8rfQDKNpZxZE0buaBaqRwY6YKONqsmrKeAw0T4Ypp3ODdEUaAuTcEALw_wcB",
@@ -572,7 +577,11 @@ class FinGest(App):
                                            background_color=(118/255.0, 215/255.0, 296/255.0,1))
                 investment_button.bind(on_press=lambda instance, url=link: self.open_investment_link(url))
                 grid.add_widget(investment_button)
+                
+            
 
+            
+        
         elif risk_level == "Arrojado":
             background = Image(source='FinGest_arrojado.png', 
                            allow_stretch=True, 
