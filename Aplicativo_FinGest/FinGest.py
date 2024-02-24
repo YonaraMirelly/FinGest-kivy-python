@@ -1,3 +1,5 @@
+from cmath import sin
+import graphlib
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -8,10 +10,12 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
+from kivy.garden.graph import Graph, MeshLinePlot
 import os
 import json
 import webbrowser 
 from kivy.clock import Clock
+from networkx import graph_atlas_g
 
 #classe principal do meu app
 class FinGest(App):
@@ -223,6 +227,22 @@ class FinGest(App):
         for label, percentage in zip(self.category_labels, new_percentages):
             label.text = f'{percentage * 100:.0f}%'
 
+    def open_graph_popup(self, instance):
+    # Cria um widget Graph
+        graph = Graph(xlabel='X', ylabel='Y', x_ticks_minor=5,
+                  x_ticks_major=25, y_ticks_major=1,
+                  y_grid_label=True, x_grid_label=True,
+                  padding=5, x_grid=True, y_grid=True,
+                  xmin=-0, xmax=100, ymin=-1, ymax=1)
+
+    # Adiciona um gráfico de linha ao widget Graph
+    plot = MeshLinePlot(color=[1, 0, 0, 1])
+    plot.points = [(x, sin(x / 10.)) for x in range(0, 101)]
+    graphlib.add_plot(plot)
+
+    # Cria um popup com o gráfico
+    popup = Popup(title='Gráfico', content=graph_atlas_g, size_hint=(None, None), size=(400, 400))
+    popup.open()
 #função para abrir o popup de customização das porcentagens
     def open_customize_popup(self, instance):
     #popup em si
