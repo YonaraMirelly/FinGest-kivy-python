@@ -80,10 +80,6 @@ class FinGest(App):
             else:
                 self.sound.play()
                 self.music_playing = True
-    def stop_music(self, instance):
-        if self.sound:
-            self.sound.stop()
-            self.music_playing = False
 
 #tela explicando como surgiu o app
     def sobre_app(self, instance):
@@ -131,7 +127,6 @@ class FinGest(App):
 
 #tela pra o usuário adicionar o seu salário para análise
     def salario(self, instance):
-    
         self.layout.clear_widgets()
         
         background = Image(source='FinGest_input.png', 
@@ -181,7 +176,6 @@ class FinGest(App):
             if isinstance(widget, Label) and widget.text.startswith('Insira APENAS números, sem vírgulas ou pontos...'):
                 self.layout.remove_widget(widget)
         
-
 #função para escolher entre - tabela, despesa, doação e investimentos        
     def escolha(self, instance):
         self.layout.clear_widgets()
@@ -376,8 +370,7 @@ class FinGest(App):
             expense_input.bind(text=lambda instance, value, index=i+10: self.update_expense_value(index, value))  #atualiza o valor na lista quando houver mudança
             self.expense_inputs.append(expense_input)
             self.layout.add_widget(expense_input)
-
-      
+ 
 #função pra salvar os inputs
     def update_expense_value(self, index, value):
         if index < len(self.expense_values):
