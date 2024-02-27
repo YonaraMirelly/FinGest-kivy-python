@@ -32,6 +32,7 @@ class FinGest(App):
 
 #função para tela inicial de boas-vindas  
     def introdução(self):
+        self.sound.loop = True
         if self.sound:
             self.sound.play()
         background = Image(source='FinGest_intro.png', 
