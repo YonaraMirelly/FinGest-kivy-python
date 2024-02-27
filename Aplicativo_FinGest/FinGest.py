@@ -242,7 +242,6 @@ class FinGest(App):
                            allow_stretch=True, 
                            keep_ratio=True)
         
-        
         #essas são as categorias
         categories = ['','','','','','']
         #porcentagens = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
