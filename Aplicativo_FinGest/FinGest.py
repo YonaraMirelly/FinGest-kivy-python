@@ -28,7 +28,7 @@ class FinGest(App):
         super().__init__(**kwargs)
         self.test_completed = False  #Variável de estado para rastrear se o teste foi concluído
         self.default_percentages = [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
-        self.music_playing = False #pra musica
+        self.music_playing = True #pra musica
 
 #função para tela inicial de boas-vindas  
     def introdução(self):
@@ -66,13 +66,13 @@ class FinGest(App):
                            pos_hint={"center_x": 0.3, "center_y": 0.070},
                            background_normal='som.png',
                            background_down='som.png',
-                           on_press=self.toggle_music)
+                           on_press=self.toque_music)
        
         self.layout.add_widget(sobre_button)
         self.layout.add_widget(background)
         self.layout.add_widget(parar_musica_button)
 #musica
-    def toggle_music(self, instance):
+    def toque_music(self, instance):
         if self.sound:
             if self.music_playing:
                 self.sound.stop()
