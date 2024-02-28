@@ -65,8 +65,8 @@ class FinGest(App):
         
         parar_musica_button = Button(size_hint=(None, None), size=(100, 100),
                            pos_hint={"center_x": 0.3, "center_y": 0.070},
-                           background_normal='som.png',
-                           background_down='som.png',
+                           background_normal='praparar.png',
+                           background_down='praparar.png',
                            on_press=self.toque_music)
        
         self.layout.add_widget(sobre_button)
@@ -78,9 +78,11 @@ class FinGest(App):
             if self.music_playing:
                 self.sound.stop()
                 self.music_playing = False
+                instance.background_normal = 'pratocar.png'
             else:
                 self.sound.play()
                 self.music_playing = True
+                instance.background_normal = 'praparar.png'
 
 #tela explicando como surgiu o app
     def sobre_app(self, instance):
