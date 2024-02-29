@@ -123,6 +123,7 @@ class FinGest(App):
         self.layout.add_widget(background)
         #aguarda 2 segundos antes de fechar o aplicativo
         Clock.schedule_once(self.close_app, 2.5) 
+    
     #pra fechar o app  
     def close_app(self, dt):
         #fecha o aplicativo
