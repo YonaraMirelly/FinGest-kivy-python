@@ -12,5 +12,5 @@
 # pip install kivy
 # Link pra você baixar a musiquinha ambiente: [https://youtu.be/RRu26oSF-Iw?si=Nk4EHepIphVY4_-R]
 # Apenas lembre-se de passar o caminho corretamente
-p.s.: nota 10!:)
+p.s.: nota 10! :)
 
